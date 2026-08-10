@@ -6,164 +6,55 @@
     <title>Green Key Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', 'Segoe UI', sans-serif; }
-        body { 
-            background: linear-gradient(135deg, #0b130e 0%, #112217 100%); 
-            color: #ffffff; 
-            text-align: center; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh; 
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0b130e 0%, #112217 100%); color: #ffffff; text-align: center; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* Balance Header Header with Glow */
-        .balance-container { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(10px);
-            width: 100%; 
-            max-width: 400px; 
-            padding: 20px; 
-            border-radius: 20px; 
-            margin-bottom: 20px; 
-            border: 1px solid rgba(0, 255, 136, 0.2); 
-            box-shadow: 0 8px 32px 0 rgba(0, 255, 136, 0.1);
-        }
-        .balance-title { font-size: 14px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; }
-        .balance-amount { 
-            font-size: 36px; 
-            font-weight: 800; 
-            color: #00ff88; 
-            margin-top: 5px; 
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
-        }
+        .balance-container { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); width: 100%; max-width: 400px; padding: 15px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(0, 255, 136, 0.2); box-shadow: 0 8px 32px 0 rgba(0, 255, 136, 0.1); }
+        .balance-title { font-size: 13px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; }
+        .balance-amount { font-size: 32px; font-weight: 800; color: #00ff88; margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
 
-        /* Navigation Tabs */
-        .nav-tabs { 
-            display: flex; 
-            width: 100%; 
-            max-width: 400px; 
-            justify-content: space-between; 
-            margin-bottom: 20px; 
-            background: rgba(0, 0, 0, 0.4); 
-            border-radius: 14px; 
-            padding: 6px; 
-            border: 1px solid #1e3a29;
-        }
-        .tab-btn { 
-            flex: 1; 
-            padding: 12px; 
-            border: none; 
-            background: transparent; 
-            color: #8f9b93; 
-            font-weight: bold; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-        }
-        .tab-btn.active { 
-            background: linear-gradient(135deg, #00ff88 0%, #00b862 100%); 
-            color: #0b130e; 
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
-        }
+        .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin-bottom: 15px; background: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px; border: 1px solid #1e3a29; overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 10px 5px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
+        .tab-btn.active { background: linear-gradient(135deg, #00ff88 0%, #00b862 100%); color: #0b130e; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3); }
 
-        /* Content Sections */
         .section { display: none; width: 100%; max-width: 400px; }
         .section.active { display: block; }
 
-        /* Wheel / Spin Section */
-        .wheel-container { position: relative; margin: 25px auto; width: 220px; height: 220px; }
-        .wheel-pointer {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 20px solid #ffd700;
-            z-index: 10;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-        .wheel { 
-            width: 100%; 
-            height: 100%; 
-            border-radius: 50%; 
-            border: 6px solid #ffd700; 
-            background: conic-gradient(
-                #00ff88 0deg 90deg, 
-                #ff0055 90deg 180deg, 
-                #ffd700 180deg 270deg, 
-                #00d2ff 270deg 360deg
-            ); 
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
-            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99); 
-        }
-        .action-btn { 
-            background: linear-gradient(135deg, #00ff88 0%, #00b862 100%); 
-            color: #0b130e; 
-            border: none; 
-            padding: 15px 30px; 
-            font-size: 18px; 
-            font-weight: 800; 
-            border-radius: 30px; 
-            cursor: pointer; 
-            margin-top: 15px; 
-            width: 100%; 
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
-            transition: transform 0.2s;
-        }
-        .action-btn:active { transform: scale(0.98); }
+        /* Wheel */
+        .wheel-container { position: relative; margin: 20px auto; width: 200px; height: 200px; }
+        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 18px solid #ffd700; z-index: 10; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #ffd700; background: conic-gradient(#00ff88 0deg 90deg, #ff0055 90deg 180deg, #ffd700 180deg 270deg, #00d2ff 270deg 360deg); box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+        .action-btn { background: linear-gradient(135deg, #00ff88 0%, #00b862 100%); color: #0b130e; border: none; padding: 14px 20px; font-size: 16px; font-weight: 800; border-radius: 25px; cursor: pointer; margin-top: 10px; width: 100%; box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4); }
 
-        /* Cards Style */
-        .card { 
-            background: rgba(255, 255, 255, 0.03); 
-            padding: 16px; 
-            border-radius: 16px; 
-            margin-bottom: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border: 1px solid rgba(0, 255, 136, 0.15); 
-            backdrop-filter: blur(5px);
-        }
+        /* Cards & Inputs */
+        .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 255, 136, 0.15); }
         .card-info { text-align: left; }
-        .card-title { font-size: 15px; font-weight: 600; color: #ffffff; }
-        .card-reward { font-size: 13px; color: #00ff88; font-weight: bold; margin-top: 3px; }
-        .small-btn { 
-            background: #112217; 
-            color: #00ff88; 
-            border: 1px solid #00ff88; 
-            padding: 8px 16px; 
-            border-radius: 20px; 
-            font-size: 12px; 
-            font-weight: bold;
-            cursor: pointer; 
-            transition: 0.3s;
-        }
-        .small-btn:hover { background: #00ff88; color: #0b130e; }
+        .card-title { font-size: 14px; font-weight: 600; color: #ffffff; }
+        .card-reward { font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 2px; }
+        .small-btn { background: #112217; color: #00ff88; border: 1px solid #00ff88; padding: 7px 14px; border-radius: 18px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        
+        .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00ff88; background: rgba(0,0,0,0.5); color: #fff; font-size: 14px; outline: none; }
     </style>
 </head>
 <body>
 
-    <!-- Balance Header -->
     <div class="balance-container">
         <div class="balance-title">የእርስዎ ነጥብ (Balance)</div>
         <div class="balance-amount"><span id="coins">0</span> 🪙</div>
     </div>
 
-    <!-- Navigation Tabs -->
+    <!-- Nav Tabs -->
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('spin')">Spin</button>
-        <button class="tab-btn" onclick="switchTab('tasks')">Tasks</button>
-        <button class="tab-btn" onclick="switchTab('ref')">Friends</button>
+        <button class="tab-btn active" onclick="switchTab('spin', this)">Spin</button>
+        <button class="tab-btn" onclick="switchTab('daily', this)">Daily</button>
+        <button class="tab-btn" onclick="switchTab('tasks', this)">Tasks</button>
+        <button class="tab-btn" onclick="switchTab('ref', this)">Friends</button>
+        <button class="tab-btn" onclick="switchTab('wallet', this)">Wallet</button>
     </div>
 
     <!-- 1. Spin Section -->
     <div id="spin" class="section active">
-        <h2 style="color: #e2e8f0; font-size: 20px;">ዕድልዎን ይሞክሩ!</h2>
+        <h3 style="color: #e2e8f0;">ዕድልዎን ይሞክሩ!</h3>
         <div class="wheel-container">
             <div class="wheel-pointer"></div>
             <div class="wheel" id="wheel"></div>
@@ -171,45 +62,64 @@
         <button class="action-btn" onclick="spinWheel()">SPIN NOW!</button>
     </div>
 
-    <!-- 2. Tasks Section -->
-    <div id="tasks" class="section">
-        <h2 style="color: #e2e8f0; font-size: 20px;">ተግባራት (Tasks)</h2>
-        <p style="color: #a0aec0; margin-bottom: 15px; font-size: 13px;">ተግባራቱን በመጨረስ ተጨማሪ ነጥብ ይሰብስቡ</p>
-        
+    <!-- 2. Daily Reward -->
+    <div id="daily" class="section">
+        <h3>የቀን ስጦታ (Daily Bonus)</h3>
+        <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">በየቀኑ እየገቡ ነፃ ነጥብ ይውሰዱ</p>
         <div class="card">
+            <div class="card-info">
+                <div class="card-title">Day 1 Bonus</div>
+                <div class="card-reward">+200 Coins</div>
+            </div>
+            <button class="small-btn" id="daily-btn" onclick="claimDaily()">Claim</button>
+        </div>
+    </div>
+
+    <!-- 3. Tasks -->
+    <div id="tasks" class="section">
+        <h3>ተግባራት (Tasks)</h3>
+        <div class="card" style="margin-top:10px;">
             <div class="card-info">
                 <div class="card-title">Join Telegram Channel</div>
                 <div class="card-reward">+500 Coins</div>
             </div>
             <button class="small-btn" onclick="completeTask(this, 500)">Claim</button>
         </div>
-        <div class="card">
-            <div class="card-info">
-                <div class="card-title">Join Telegram Group</div>
-                <div class="card-reward">+300 Coins</div>
-            </div>
-            <button class="small-btn" onclick="completeTask(this, 300)">Claim</button>
-        </div>
     </div>
 
-    <!-- 3. Referral Section -->
+    <!-- 4. Friends -->
     <div id="ref" class="section">
-        <h2 style="color: #e2e8f0; font-size: 20px;">ጓደኞችዎን ይጋብዙ</h2>
-        <p style="color: #a0aec0; margin-bottom: 15px; font-size: 13px;">ለእያንዳንዱ ሰው 200 ነጥብ ያግኙ</p>
-        
-        <div class="card">
+        <h3>ጓደኞችዎን ይጋብዙ</h3>
+        <div class="card" style="margin-top:10px;">
             <div class="card-info">
                 <div class="card-title">የመጋበዣ ሊንክዎ</div>
-                <div class="card-reward" id="ref-link">https://t.me/greenkeybot?start=ref</div>
+                <div class="card-reward">https://t.me/greenkeybot?start=ref</div>
             </div>
             <button class="small-btn" onclick="copyRef()">Copy</button>
         </div>
     </div>
 
+    <!-- 5. Wallet / Withdrawal -->
+    <div id="wallet" class="section">
+        <h3>ገንዘብ ማውጫ (Withdraw)</h3>
+        <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ዝቅተኛ ማውጫ፦ 10,000 Coins (100 ETB)</p>
+        <input type="text" class="input-box" placeholder="Telebirr / CBE ስልክ ቁጥር">
+        <button class="action-btn" onclick="requestWithdraw()">ገንዘብ አውጣ (Withdraw)</button>
+    </div>
+
     <script>
+        const tg = window.Telegram?.WebApp;
+        if (tg) tg.expand();
+
         let balance = parseInt(localStorage.getItem('user_coins')) || 0;
         document.getElementById('coins').innerText = balance;
         let isSpinning = false;
+
+        function triggerHaptic() {
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+        }
 
         function updateBalance(amount) {
             balance += amount;
@@ -217,15 +127,17 @@
             localStorage.setItem('user_coins', balance);
         }
 
-        function switchTab(tabId) {
+        function switchTab(tabId, btn) {
+            triggerHaptic();
             document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
+            btn.classList.add('active');
         }
 
         function spinWheel() {
             if (isSpinning) return;
+            triggerHaptic();
             isSpinning = true;
             
             let randomRot = Math.floor(Math.random() * 360) + 1440;
@@ -235,22 +147,48 @@
             setTimeout(() => {
                 let wonCoins = Math.floor(Math.random() * 100) + 50;
                 updateBalance(wonCoins);
+                triggerHaptic();
                 alert(`እንኳን ደስ አለዎት! ${wonCoins} ነጥብ አግኝተዋል!`);
                 isSpinning = false;
             }, 3000);
         }
 
+        function claimDaily() {
+            triggerHaptic();
+            let lastClaim = localStorage.getItem('last_daily');
+            let today = new Date().toDateString();
+
+            if (lastClaim === today) {
+                alert("የዛሬውን ስጦታ ወስደዋል። ነገ ተመልሰው ይምጡ!");
+            } else {
+                updateBalance(200);
+                localStorage.setItem('last_daily', today);
+                document.getElementById('daily-btn').innerText = "Done ✓";
+                document.getElementById('daily-btn').disabled = true;
+                alert("200 Coins የዛሬ ስጦታ ተጨምሮልዎታል!");
+            }
+        }
+
         function completeTask(btn, reward) {
+            triggerHaptic();
             updateBalance(reward);
             btn.innerText = "Done ✓";
-            btn.style.background = "#00ff88";
-            btn.style.color = "#0b130e";
             btn.disabled = true;
         }
 
         function copyRef() {
+            triggerHaptic();
             navigator.clipboard.writeText("https://t.me/greenkeybot?start=ref");
             alert("የመጋበዣ ሊንኩ Copy ሆኗል!");
+        }
+
+        function requestWithdraw() {
+            triggerHaptic();
+            if (balance < 10000) {
+                alert("ለማውጣት ቢያንስ 10,000 Coins ያስፈልግዎታል።");
+            } else {
+                alert("የማውጣት ጥያቄዎ ተልኳል! በቅርቡ ይገመገማል።");
+            }
         }
     </script>
 </body>
