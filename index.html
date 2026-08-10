@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spin Wheel Game</title>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; background: #121212; color: white; }
+    .wheel { width: 250px; height: 250px; border-radius: 50%; border: 5px solid #fff; margin: 20px auto; transition: transform 3s ease-out; }
+    button { padding: 12px 24px; font-size: 18px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Lucky Spin Wheel</h2>
+  <div class="wheel" id="wheel" style="background: conic-gradient(#ff4757 0deg 90deg, #ffa502 90deg 180deg, #2ed573 180deg 270deg, #1e90ff 270deg 360deg);"></div>
+  <button onclick="spin()">Spin Now!</button>
+
+  <script>
+    function spin() {
+      let rand = Math.floor(Math.random() * 360) + 1440;
+      document.getElementById('wheel').style.transform = 'rotate(' + rand + 'deg)';
+    }
+  </script>
+</body>
+</html>
+
