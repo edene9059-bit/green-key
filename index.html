@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="am">
 <head>
@@ -12,40 +11,91 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: linear-gradient(135deg, #0b130e 0%, #112217 100%); color: #ffffff; text-align: center; padding: 15px; min-height: 100vh; }
+    :root {
+      --neon-green: #00ff38;
+      --deep-green: #082d14;
+      --silver: #e2e8f0;
+      --dark-bg: #050a07;
+    }
 
-    .balance-container { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); width: 100%; max-width: 400px; margin: 0 auto 15px; padding: 15px; border-radius: 16px; border: 1px solid rgba(0, 255, 136, 0.2); }
-    .balance-title { font-size: 13px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; }
-    .balance-amount { font-size: 32px; font-weight: 800; color: #00ff88; margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    
+    body { 
+      background: radial-gradient(circle at top, #0f2c1b 0%, var(--dark-bg) 70%); 
+      color: #ffffff; 
+      text-align: center; 
+      padding: 15px; 
+      min-height: 100vh;
+    }
 
-    .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin: 0 auto 15px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
-    .tab-btn { flex: 1; padding: 10px 2px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-    .tab-btn.active { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3); }
+    /* Logo Header */
+    .app-logo {
+      width: 100px;
+      height: 100px;
+      margin: 10px auto;
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(0, 255, 56, 0.4);
+      border: 2px solid var(--neon-green);
+      object-fit: cover;
+    }
+
+    .app-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px rgba(0, 255, 56, 0.5);
+      margin-bottom: 15px;
+    }
+    .app-title span { color: var(--silver); }
+
+    /* Balance Box */
+    .balance-container { 
+      background: rgba(8, 45, 20, 0.6); 
+      backdrop-filter: blur(12px); 
+      width: 100%; 
+      max-width: 400px; 
+      margin: 0 auto 15px; 
+      padding: 18px; 
+      border-radius: 20px; 
+      border: 1px solid rgba(0, 255, 56, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    .balance-title { font-size: 12px; color: var(--silver); letter-spacing: 1.5px; text-transform: uppercase; }
+    .balance-amount { font-size: 34px; font-weight: 800; color: var(--neon-green); margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 56, 0.5); }
+
+    /* Nav Tabs */
+    .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin: 0 auto 15px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+    .tab-btn { flex: 1; padding: 10px 2px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 12px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+    .tab-btn.active { background: linear-gradient(135deg, var(--neon-green) 0%, #00a82d 100%); color: #000; box-shadow: 0 0 15px rgba(0, 255, 56, 0.4); }
 
     .section { display: none; width: 100%; max-width: 400px; margin: 0 auto; }
     .section.active { display: block; }
 
-    /* Wheel */
-    .wheel-container { position: relative; margin: 20px auto; width: 200px; height: 200px; }
-    .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #ffd700; z-index: 10; }
-    .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #ffd700; background: conic-gradient(#00ff88 0deg 60deg, #112217 60deg 120deg, #00b8d4 120deg 180deg, #112217 180deg 240deg, #00ff88 240deg 300deg, #112217 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); }
-    .action-btn { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; border: none; padding: 12px 30px; font-weight: bold; border-radius: 25px; cursor: pointer; font-size: 16px; margin-top: 15px; width: 100%; }
+    /* Wheel Section */
+    .wheel-container { position: relative; margin: 20px auto; width: 210px; height: 210px; }
+    .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #ffffff; filter: drop-shadow(0 0 8px var(--neon-green)); z-index: 10; }
+    .wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--neon-green); background: conic-gradient(var(--neon-green) 0deg 60deg, #061f0e 60deg 120deg, var(--silver) 120deg 180deg, #061f0e 180deg 240deg, var(--neon-green) 240deg 300deg, #061f0e 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 0 20px rgba(0, 255, 56, 0.2); }
+    
+    .action-btn { background: linear-gradient(135deg, var(--neon-green) 0%, #009929 100%); color: #000; border: none; padding: 14px 30px; font-weight: 800; border-radius: 30px; cursor: pointer; font-size: 15px; margin-top: 15px; width: 100%; box-shadow: 0 4px 20px rgba(0, 255, 56, 0.4); text-transform: uppercase; letter-spacing: 1px; }
 
     /* Cards & Inputs */
-    .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 255, 56, 0.15); }
     .card-info { text-align: left; }
     .card-title { font-size: 14px; font-weight: 600; color: #ffffff; }
-    .card-reward { font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 2px; }
-    .small-btn { background: #112217; color: #00ff88; border: 1px solid #00ff88; padding: 7px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+    .card-reward { font-size: 12px; color: var(--neon-green); font-weight: bold; margin-top: 2px; }
+    .small-btn { background: rgba(0, 255, 56, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
-    .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00ff88; background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-size: 14px; }
+    .input-box { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--neon-green); background: rgba(0,0,0,0.6); color: #fff; text-align: center; font-size: 14px; outline: none; }
     
-    /* Admin Section */
-    .admin-card { background: rgba(0, 0, 0, 0.4); padding: 10px; border-radius: 10px; border: 1px solid #00b8d4; margin-bottom: 8px; text-align: left; font-size: 12px; }
+    .admin-card { background: rgba(0, 0, 0, 0.6); padding: 12px; border-radius: 10px; border: 1px solid var(--neon-green); margin-bottom: 10px; text-align: left; font-size: 12px; }
   </style>
 </head>
 <body>
+
+  <!-- Logo & Title -->
+  <img src="https://raw.githubusercontent.com/edene9059-bit/green-key/main/logo.jpg" class="app-logo" alt="Green Key Logo" onerror="this.style.display='none'">
+  <h1 class="app-title">GREEN <span>KEY</span></h1>
 
   <div class="balance-container">
     <div class="balance-title">የእርስዎ ያገኙት ነጥብ (Balance)</div>
@@ -123,11 +173,11 @@
   <div id="admin" class="section">
     <h3>Admin Dashboard</h3>
     <div id="admin-login">
-      <input type="password" id="admin-pass" class="input-box" placeholder="Admin PIN ያስገቡ (ለምሳሌ: 1234)">
+      <input type="password" id="admin-pass" class="input-box" placeholder="Admin PIN ያስገቡ">
       <button class="action-btn" onclick="checkAdmin()">ግበታ (Login)</button>
     </div>
     <div id="admin-content" style="display: none; margin-top: 15px;">
-      <h4 style="color:#00ff88; margin-bottom: 10px;">የማውጫ ጥያቄዎች (Requests)</h4>
+      <h4 style="color:var(--neon-green); margin-bottom: 10px;">የማውጫ ጥያቄዎች (Requests)</h4>
       <div id="withdrawal-list"></div>
     </div>
   </div>
@@ -149,7 +199,7 @@
 
     let balance = 0;
     let isSpinning = false;
-    const ADMIN_PIN = "1234"; // እዚህ ጋር የሚፈለጉትን የ Admin PIN መቀየር ይችላሉ
+    const ADMIN_PIN = "1234"; 
 
     function loadUserData() {
       database.ref('users/' + userId).once('value').then((snapshot) => {
@@ -276,7 +326,6 @@
       });
     }
 
-    /* Admin Panel Functions */
     function checkAdmin() {
       const inputPin = document.getElementById('admin-pass').value;
       if (inputPin === ADMIN_PIN) {
