@@ -1,195 +1,240 @@
 <!DOCTYPE html>
 <html lang="am">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Key Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: linear-gradient(135deg, #0b130e 0%, #112217 100%); color: #ffffff; text-align: center; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
-        .balance-container { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); width: 100%; max-width: 400px; padding: 15px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(0, 255, 136, 0.2); box-shadow: 0 8px 32px 0 rgba(0, 255, 136, 0.1); }
-        .balance-title { font-size: 13px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; }
-        .balance-amount { font-size: 32px; font-weight: 800; color: #00ff88; margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Green Key Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-        .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin-bottom: 15px; background: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px; border: 1px solid #1e3a29; overflow-x: auto; }
-        .tab-btn { flex: 1; padding: 10px 5px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; }
-        .tab-btn.active { background: linear-gradient(135deg, #00ff88 0%, #00b862 100%); color: #0b130e; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3); }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: linear-gradient(135deg, #0b130e 0%, #112217 100%); color: #ffffff; text-align: center; padding: 15px; min-height: 100vh; }
 
-        .section { display: none; width: 100%; max-width: 400px; }
-        .section.active { display: block; }
+    .balance-container { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); width: 100%; max-width: 400px; margin: 0 auto 15px; padding: 15px; border-radius: 16px; border: 1px solid rgba(0, 255, 136, 0.2); }
+    .balance-title { font-size: 13px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; }
+    .balance-amount { font-size: 32px; font-weight: 800; color: #00ff88; margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
 
-        /* Wheel */
-        .wheel-container { position: relative; margin: 20px auto; width: 200px; height: 200px; }
-        .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 18px solid #ffd700; z-index: 10; }
-        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #ffd700; background: conic-gradient(#00ff88 0deg 90deg, #ff0055 90deg 180deg, #ffd700 180deg 270deg, #00d2ff 270deg 360deg); box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
-        .action-btn { background: linear-gradient(135deg, #00ff88 0%, #00b862 100%); color: #0b130e; border: none; padding: 14px 20px; font-size: 16px; font-weight: 800; border-radius: 25px; cursor: pointer; margin-top: 10px; width: 100%; box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4); }
+    .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin-bottom: 15px; margin: 0 auto 15px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 10px 5px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 13px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .tab-btn.active { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3); }
 
-        /* Cards & Inputs */
-        .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 255, 136, 0.15); }
-        .card-info { text-align: left; }
-        .card-title { font-size: 14px; font-weight: 600; color: #ffffff; }
-        .card-reward { font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 2px; }
-        .small-btn { background: #112217; color: #00ff88; border: 1px solid #00ff88; padding: 7px 14px; border-radius: 18px; font-size: 11px; font-weight: bold; cursor: pointer; }
-        
-        .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00ff88; background: rgba(0,0,0,0.5); color: #fff; font-size: 14px; outline: none; }
-    </style>
+    .section { display: none; width: 100%; max-width: 400px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    /* Wheel */
+    .wheel-container { position: relative; margin: 20px auto; width: 200px; height: 200px; }
+    .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #ffd700; z-index: 10; }
+    .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #ffd700; background: conic-gradient(#00ff88 0deg 60deg, #112217 60deg 120deg, #00b8d4 120deg 180deg, #112217 180deg 240deg, #00ff88 240deg 300deg, #112217 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); }
+    .action-btn { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; border: none; padding: 12px 30px; font-weight: bold; border-radius: 25px; cursor: pointer; font-size: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4); }
+
+    /* Cards & Inputs */
+    .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .card-info { text-align: left; }
+    .card-title { font-size: 14px; font-weight: 600; color: #ffffff; }
+    .card-reward { font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 2px; }
+    .small-btn { background: #112217; color: #00ff88; border: 1px solid #00ff88; padding: 7px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+    .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00ff88; background: rgba(0,0,0,0.5); color: #fff; text-align: center; }
+  </style>
 </head>
 <body>
 
-    <div class="balance-container">
-        <div class="balance-title">የእርስዎ ነጥብ (Balance)</div>
-        <div class="balance-amount"><span id="coins">0</span> 🪙</div>
+  <div class="balance-container">
+    <div class="balance-title">የእርስዎ ያገኙት ነጥብ (Balance)</div>
+    <div class="balance-amount"><span id="coins">0</span> 🪙</div>
+  </div>
+
+  <!-- Nav Tabs -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('spin', this)">Spin</button>
+    <button class="tab-btn" onclick="switchTab('daily', this)">Daily</button>
+    <button class="tab-btn" onclick="switchTab('tasks', this)">Tasks</button>
+    <button class="tab-btn" onclick="switchTab('ref', this)">Friends</button>
+    <button class="tab-btn" onclick="switchTab('wallet', this)">Wallet</button>
+  </div>
+
+  <!-- 1. Spin Section -->
+  <div id="spin" class="section active">
+    <h3 style="color: #e2e8f0;">ዕድልዎን ይሞክሩ!</h3>
+    <div class="wheel-container">
+      <div class="wheel-pointer"></div>
+      <div class="wheel" id="wheel"></div>
     </div>
+    <button class="action-btn" onclick="spinWheel()">SPIN NOW!</button>
+  </div>
 
-    <!-- Nav Tabs -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('spin', this)">Spin</button>
-        <button class="tab-btn" onclick="switchTab('daily', this)">Daily</button>
-        <button class="tab-btn" onclick="switchTab('tasks', this)">Tasks</button>
-        <button class="tab-btn" onclick="switchTab('ref', this)">Friends</button>
-        <button class="tab-btn" onclick="switchTab('wallet', this)">Wallet</button>
+  <!-- 2. Daily Reward -->
+  <div id="daily" class="section">
+    <h3>የቀን ስጦታ (Daily Bonus)</h3>
+    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">በየቀኑ እየገቡ ነፃ ነጥብ ይውሰዱ</p>
+    <div class="card">
+      <div class="card-info">
+        <div class="card-title">Day 1 Bonus</div>
+        <div class="card-reward">+200 Coins</div>
+      </div>
+      <button class="small-btn" id="daily-btn" onclick="claimDaily()">Claim</button>
     </div>
+  </div>
 
-    <!-- 1. Spin Section -->
-    <div id="spin" class="section active">
-        <h3 style="color: #e2e8f0;">ዕድልዎን ይሞክሩ!</h3>
-        <div class="wheel-container">
-            <div class="wheel-pointer"></div>
-            <div class="wheel" id="wheel"></div>
-        </div>
-        <button class="action-btn" onclick="spinWheel()">SPIN NOW!</button>
+  <!-- 3. Tasks Section -->
+  <div id="tasks" class="section">
+    <h3>ተግባራትን ያጠናቅቁ</h3>
+    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ቻናሎችን በመቀላቀል ተጨማሪ ነጥብ ያግኙ</p>
+    <div class="card">
+      <div class="card-info">
+        <div class="card-title">Telegram Channel የተቀላቀሉ</div>
+        <div class="card-reward">+500 Coins</div>
+      </div>
+      <button class="small-btn" onclick="completeTask(this, 500)">Claim</button>
     </div>
+  </div>
 
-    <!-- 2. Daily Reward -->
-    <div id="daily" class="section">
-        <h3>የቀን ስጦታ (Daily Bonus)</h3>
-        <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">በየቀኑ እየገቡ ነፃ ነጥብ ይውሰዱ</p>
-        <div class="card">
-            <div class="card-info">
-                <div class="card-title">Day 1 Bonus</div>
-                <div class="card-reward">+200 Coins</div>
-            </div>
-            <button class="small-btn" id="daily-btn" onclick="claimDaily()">Claim</button>
-        </div>
+  <!-- 4. Friends / Referral Section -->
+  <div id="ref" class="section">
+    <h3>ጓደኞችን ይጋብዙ</h3>
+    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">በእርስዎ ሊንክ ለሚገባ እያንዳንዱ ሰው ነጥብ ያግኙ</p>
+    <div class="card">
+      <div class="card-info">
+        <div class="card-title">የእርስዎ የጋባዥነት ሊንክ</div>
+        <div class="card-reward">+1000 Coins per friend</div>
+      </div>
+      <button class="small-btn" onclick="copyRef()">Copy Link</button>
     </div>
+  </div>
 
-    <!-- 3. Tasks -->
-    <div id="tasks" class="section">
-        <h3>ተግባራት (Tasks)</h3>
-        <div class="card" style="margin-top:10px;">
-            <div class="card-info">
-                <div class="card-title">Join Telegram Channel</div>
-                <div class="card-reward">+500 Coins</div>
-            </div>
-            <button class="small-btn" onclick="completeTask(this, 500)">Claim</button>
-        </div>
-    </div>
+  <!-- 5. Wallet / Withdraw Section -->
+  <div id="wallet" class="section">
+    <h3>ገንዘብ ማውጫ (Wallet)</h3>
+    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ዝቅተኛው ማውጫ 10,000 Coins ነው</p>
+    <input type="text" class="input-box" placeholder="የቴሌብር ወይም የባንክ አካውንት ያስገቡ">
+    <button class="action-btn" onclick="requestWithdraw()">ገንዘብ ለማውጣት ጠይቅ</button>
+  </div>
 
-    <!-- 4. Friends -->
-    <div id="ref" class="section">
-        <h3>ጓደኞችዎን ይጋብዙ</h3>
-        <div class="card" style="margin-top:10px;">
-            <div class="card-info">
-                <div class="card-title">የመጋበዣ ሊንክዎ</div>
-                <div class="card-reward">https://t.me/greenkeybot?start=ref</div>
-            </div>
-            <button class="small-btn" onclick="copyRef()">Copy</button>
-        </div>
-    </div>
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      databaseURL: "https://green-key-db-default-rtdb.firebaseio.com/"
+    };
 
-    <!-- 5. Wallet / Withdrawal -->
-    <div id="wallet" class="section">
-        <h3>ገንዘብ ማውጫ (Withdraw)</h3>
-        <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ዝቅተኛ ማውጫ፦ 10,000 Coins (100 ETB)</p>
-        <input type="text" class="input-box" placeholder="Telebirr / CBE ስልክ ቁጥር">
-        <button class="action-btn" onclick="requestWithdraw()">ገንዘብ አውጣ (Withdraw)</button>
-    </div>
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-    <script>
-        const tg = window.Telegram?.WebApp;
-        if (tg) tg.expand();
+    // Telegram App Data
+    const tg = window.Telegram?.WebApp;
+    if (tg) tg.expand();
+    const userId = tg?.initDataUnsafe?.user?.id || "guest_user";
 
-        let balance = parseInt(localStorage.getItem('user_coins')) || 0;
+    let balance = 0;
+    let isSpinning = false;
+
+    // 1. ነጥብ ከ Firebase ማምጣት (Load User Data)
+    function loadUserData() {
+      database.ref('users/' + userId).once('value').then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          balance = data.score || 0;
+        } else {
+          balance = 0;
+          saveUserData(balance);
+        }
         document.getElementById('coins').innerText = balance;
-        let isSpinning = false;
+      });
+    }
 
-        function triggerHaptic() {
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('medium');
-            }
-        }
+    // 2. ነጥብ Firebase ላይ ማስቀመጥ (Save User Data)
+    function saveUserData(newBalance) {
+      database.ref('users/' + userId).set({
+        score: newBalance,
+        lastUpdated: new Date().toISOString()
+      });
+    }
 
-        function updateBalance(amount) {
-            balance += amount;
-            document.getElementById('coins').innerText = balance;
-            localStorage.setItem('user_coins', balance);
-        }
+    // 3. Balance ማስተካከያ ተግባር
+    function updateBalance(amount) {
+      balance += amount;
+      document.getElementById('coins').innerText = balance;
+      saveUserData(balance);
+    }
 
-        function switchTab(tabId, btn) {
-            triggerHaptic();
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
+    function triggerHaptic() {
+      if (tg && tg.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred('medium');
+      }
+    }
 
-        function spinWheel() {
-            if (isSpinning) return;
-            triggerHaptic();
-            isSpinning = true;
-            
-            let randomRot = Math.floor(Math.random() * 360) + 1440;
-            let wheel = document.getElementById('wheel');
-            wheel.style.transform = `rotate(${randomRot}deg)`;
+    function switchTab(tabId, btn) {
+      triggerHaptic();
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
 
-            setTimeout(() => {
-                let wonCoins = Math.floor(Math.random() * 100) + 50;
-                updateBalance(wonCoins);
-                triggerHaptic();
-                alert(`እንኳን ደስ አለዎት! ${wonCoins} ነጥብ አግኝተዋል!`);
-                isSpinning = false;
-            }, 3000);
-        }
+    function spinWheel() {
+      if (isSpinning) return;
+      triggerHaptic();
+      isSpinning = true;
 
-        function claimDaily() {
-            triggerHaptic();
-            let lastClaim = localStorage.getItem('last_daily');
-            let today = new Date().toDateString();
+      let randomRot = Math.floor(Math.random() * 360) + 1440;
+      let wheel = document.getElementById('wheel');
+      wheel.style.transform = `rotate(${randomRot}deg)`;
 
-            if (lastClaim === today) {
-                alert("የዛሬውን ስጦታ ወስደዋል። ነገ ተመልሰው ይምጡ!");
-            } else {
-                updateBalance(200);
-                localStorage.setItem('last_daily', today);
-                document.getElementById('daily-btn').innerText = "Done ✓";
-                document.getElementById('daily-btn').disabled = true;
-                alert("200 Coins የዛሬ ስጦታ ተጨምሮልዎታል!");
-            }
-        }
+      setTimeout(() => {
+        let wonCoins = Math.floor(Math.random() * 100) + 50;
+        updateBalance(wonCoins);
+        triggerHaptic();
+        alert(`እንኳን ደስ አለዎት! ${wonCoins} ነጥብ አግኝተዋል!`);
+        isSpinning = false;
+      }, 3000);
+    }
 
-        function completeTask(btn, reward) {
-            triggerHaptic();
-            updateBalance(reward);
-            btn.innerText = "Done ✓";
-            btn.disabled = true;
-        }
+    function claimDaily() {
+      triggerHaptic();
+      let lastClaim = localStorage.getItem('last_daily');
+      let today = new Date().toDateString();
 
-        function copyRef() {
-            triggerHaptic();
-            navigator.clipboard.writeText("https://t.me/greenkeybot?start=ref");
-            alert("የመጋበዣ ሊንኩ Copy ሆኗል!");
-        }
+      if (lastClaim === today) {
+        alert("የዛሬውን የቀን ስጦታ ተቀብለዋል! ነገ ተመልሰው ይምጡ!");
+      } else {
+        updateBalance(200);
+        localStorage.setItem('last_daily', today);
+        document.getElementById('daily-btn').innerText = "Done ✓";
+        document.getElementById('daily-btn').disabled = true;
+        alert("200 Coins በነፃ አግኝተዋል!");
+      }
+    }
 
-        function requestWithdraw() {
-            triggerHaptic();
-            if (balance < 10000) {
-                alert("ለማውጣት ቢያንስ 10,000 Coins ያስፈልግዎታል።");
-            } else {
-                alert("የማውጣት ጥያቄዎ ተልኳል! በቅርቡ ይገመገማል።");
-            }
-        }
-    </script>
+    function completeTask(btn, reward) {
+      triggerHaptic();
+      updateBalance(reward);
+      btn.innerText = "Done ✓";
+      btn.disabled = true;
+    }
+
+    function copyRef() {
+      triggerHaptic();
+      navigator.clipboard.writeText("https://t.me/greenkeybot?start=ref");
+      alert("የመጋበዣ ሊንክ Copy ሆኗል!");
+    }
+
+    function requestWithdraw() {
+      triggerHaptic();
+      if (balance < 10000) {
+        alert("ገንዘብ ለማውጣት ቢያንስ 10,000 Coins ያስፈልግዎታል!");
+      } else {
+        alert("የማውጣት ጥያቄዎ ተልኳል! በቅርቡ እናረጋግጣለን!");
+      }
+    }
+
+    // ገጹ ሲከፈት ዳታውን ከ Firebase ይጭናል
+    window.addEventListener('DOMContentLoaded', () => {
+      loadUserData();
+    });
+  </script>
 </body>
 </html>
