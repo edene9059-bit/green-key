@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="am">
 <head>
@@ -18,8 +19,8 @@
     .balance-title { font-size: 13px; color: #a0aec0; letter-spacing: 1px; text-transform: uppercase; }
     .balance-amount { font-size: 32px; font-weight: 800; color: #00ff88; margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
 
-    .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin-bottom: 15px; margin: 0 auto 15px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
-    .tab-btn { flex: 1; padding: 10px 5px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 13px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin: 0 auto 15px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 10px 2px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
     .tab-btn.active { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3); }
 
     .section { display: none; width: 100%; max-width: 400px; margin: 0 auto; }
@@ -29,7 +30,7 @@
     .wheel-container { position: relative; margin: 20px auto; width: 200px; height: 200px; }
     .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #ffd700; z-index: 10; }
     .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #ffd700; background: conic-gradient(#00ff88 0deg 60deg, #112217 60deg 120deg, #00b8d4 120deg 180deg, #112217 180deg 240deg, #00ff88 240deg 300deg, #112217 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); }
-    .action-btn { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; border: none; padding: 12px 30px; font-weight: bold; border-radius: 25px; cursor: pointer; font-size: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4); }
+    .action-btn { background: linear-gradient(135deg, #00ff88 0%, #00b8d4 100%); color: #0b130e; border: none; padding: 12px 30px; font-weight: bold; border-radius: 25px; cursor: pointer; font-size: 16px; margin-top: 15px; width: 100%; }
 
     /* Cards & Inputs */
     .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.05); }
@@ -38,7 +39,10 @@
     .card-reward { font-size: 12px; color: #00ff88; font-weight: bold; margin-top: 2px; }
     .small-btn { background: #112217; color: #00ff88; border: 1px solid #00ff88; padding: 7px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
-    .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00ff88; background: rgba(0,0,0,0.5); color: #fff; text-align: center; }
+    .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #00ff88; background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-size: 14px; }
+    
+    /* Admin Section */
+    .admin-card { background: rgba(0, 0, 0, 0.4); padding: 10px; border-radius: 10px; border: 1px solid #00b8d4; margin-bottom: 8px; text-align: left; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -55,11 +59,12 @@
     <button class="tab-btn" onclick="switchTab('tasks', this)">Tasks</button>
     <button class="tab-btn" onclick="switchTab('ref', this)">Friends</button>
     <button class="tab-btn" onclick="switchTab('wallet', this)">Wallet</button>
+    <button class="tab-btn" onclick="switchTab('admin', this)" style="color:#ffd700;">Admin</button>
   </div>
 
   <!-- 1. Spin Section -->
   <div id="spin" class="section active">
-    <h3 style="color: #e2e8f0;">ዕድልዎን ይሞክሩ!</h3>
+    <h3>ዕድልዎን ይሞክሩ!</h3>
     <div class="wheel-container">
       <div class="wheel-pointer"></div>
       <div class="wheel" id="wheel"></div>
@@ -110,51 +115,75 @@
   <div id="wallet" class="section">
     <h3>ገንዘብ ማውጫ (Wallet)</h3>
     <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ዝቅተኛው ማውጫ 10,000 Coins ነው</p>
-    <input type="text" class="input-box" placeholder="የቴሌብር ወይም የባንክ አካውንት ያስገቡ">
+    <input type="text" id="payout-details" class="input-box" placeholder="የቴሌብር ወይም የባንክ አካውንት ያስገቡ">
     <button class="action-btn" onclick="requestWithdraw()">ገንዘብ ለማውጣት ጠይቅ</button>
   </div>
 
+  <!-- 6. Admin Panel Section -->
+  <div id="admin" class="section">
+    <h3>Admin Dashboard</h3>
+    <div id="admin-login">
+      <input type="password" id="admin-pass" class="input-box" placeholder="Admin PIN ያስገቡ (ለምሳሌ: 1234)">
+      <button class="action-btn" onclick="checkAdmin()">ግበታ (Login)</button>
+    </div>
+    <div id="admin-content" style="display: none; margin-top: 15px;">
+      <h4 style="color:#00ff88; margin-bottom: 10px;">የማውጫ ጥያቄዎች (Requests)</h4>
+      <div id="withdrawal-list"></div>
+    </div>
+  </div>
+
   <script>
-    // Firebase Configuration
     const firebaseConfig = {
       databaseURL: "https://green-key-db-default-rtdb.firebaseio.com/"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Telegram App Data
     const tg = window.Telegram?.WebApp;
     if (tg) tg.expand();
-    const userId = tg?.initDataUnsafe?.user?.id || "guest_user";
+    
+    const user = tg?.initDataUnsafe?.user;
+    const userId = user?.id || "guest_user";
+    const userName = user?.first_name || "Guest";
 
     let balance = 0;
     let isSpinning = false;
+    const ADMIN_PIN = "1234"; // እዚህ ጋር የሚፈለጉትን የ Admin PIN መቀየር ይችላሉ
 
-    // 1. ነጥብ ከ Firebase ማምጣት (Load User Data)
     function loadUserData() {
       database.ref('users/' + userId).once('value').then((snapshot) => {
         if (snapshot.exists()) {
-          const data = snapshot.val();
-          balance = data.score || 0;
+          balance = snapshot.val().score || 0;
         } else {
           balance = 0;
           saveUserData(balance);
+          checkReferral();
         }
         document.getElementById('coins').innerText = balance;
       });
     }
 
-    // 2. ነጥብ Firebase ላይ ማስቀመጥ (Save User Data)
+    function checkReferral() {
+      const startParam = tg?.initDataUnsafe?.start_param;
+      if (startParam && startParam !== userId.toString()) {
+        database.ref('users/' + startParam).once('value').then((snapshot) => {
+          if (snapshot.exists()) {
+            const currentScore = snapshot.val().score || 0;
+            database.ref('users/' + startParam).update({ score: currentScore + 1000 });
+          }
+        });
+      }
+    }
+
     function saveUserData(newBalance) {
       database.ref('users/' + userId).set({
+        name: userName,
         score: newBalance,
         lastUpdated: new Date().toISOString()
       });
     }
 
-    // 3. Balance ማስተካከያ ተግባር
     function updateBalance(amount) {
       balance += amount;
       document.getElementById('coins').innerText = balance;
@@ -162,9 +191,7 @@
     }
 
     function triggerHaptic() {
-      if (tg && tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('medium');
-      }
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
     }
 
     function switchTab(tabId, btn) {
@@ -199,7 +226,7 @@
       let today = new Date().toDateString();
 
       if (lastClaim === today) {
-        alert("የዛሬውን የቀን ስጦታ ተቀብለዋል! ነገ ተመልሰው ይምጡ!");
+        alert("የዛሬውን የቀን ስጦታ ተቀብለዋል!");
       } else {
         updateBalance(200);
         localStorage.setItem('last_daily', today);
@@ -218,20 +245,71 @@
 
     function copyRef() {
       triggerHaptic();
-      navigator.clipboard.writeText("https://t.me/greenkeybot?start=ref");
-      alert("የመጋበዣ ሊንክ Copy ሆኗል!");
+      const refLink = `https://t.me/greenkeybot?start=${userId}`;
+      navigator.clipboard.writeText(refLink);
+      alert("የእርስዎ የጋባዥነት ሊንክ Copy ሆኗል!\n" + refLink);
     }
 
     function requestWithdraw() {
       triggerHaptic();
+      const payoutInput = document.getElementById('payout-details').value.trim();
+
       if (balance < 10000) {
         alert("ገንዘብ ለማውጣት ቢያንስ 10,000 Coins ያስፈልግዎታል!");
+        return;
+      }
+      if (!payoutInput) {
+        alert("እባክዎን የቴሌብር ወይም የባንክ አካውንት ቁጥር ያስገቡ!");
+        return;
+      }
+
+      database.ref('withdrawals').push().set({
+        userId: userId,
+        userName: userName,
+        accountDetails: payoutInput,
+        amount: 10000,
+        date: new Date().toLocaleDateString()
+      }).then(() => {
+        updateBalance(-10000);
+        document.getElementById('payout-details').value = '';
+        alert("የማውጣት ጥያቄዎ በተሳካ ሁኔታ ተልኳል!");
+      });
+    }
+
+    /* Admin Panel Functions */
+    function checkAdmin() {
+      const inputPin = document.getElementById('admin-pass').value;
+      if (inputPin === ADMIN_PIN) {
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('admin-content').style.display = 'block';
+        loadAdminData();
       } else {
-        alert("የማውጣት ጥያቄዎ ተልኳል! በቅርቡ እናረጋግጣለን!");
+        alert("የተሳሳተ Admin PIN ነው!");
       }
     }
 
-    // ገጹ ሲከፈት ዳታውን ከ Firebase ይጭናል
+    function loadAdminData() {
+      const listDiv = document.getElementById('withdrawal-list');
+      database.ref('withdrawals').on('value', (snapshot) => {
+        listDiv.innerHTML = '';
+        if (snapshot.exists()) {
+          snapshot.forEach((child) => {
+            const data = child.val();
+            listDiv.innerHTML += `
+              <div class="admin-card">
+                <b>ስም:</b> ${data.userName}<br>
+                <b>አካውንት:</b> ${data.accountDetails}<br>
+                <b>መጠን:</b> ${data.amount} Coins<br>
+                <b>ቀን:</b> ${data.date}
+              </div>
+            `;
+          });
+        } else {
+          listDiv.innerHTML = '<p style="font-size:12px; color:#aaa;">ምንም ጥያቄ የለም።</p>';
+        }
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       loadUserData();
     });
