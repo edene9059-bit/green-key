@@ -16,105 +16,129 @@
       --deep-green: #082d14;
       --silver: #e2e8f0;
       --dark-bg: #050a07;
+      --gold: #ffd700;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; user-select: none; }
     
     body { 
       background: radial-gradient(circle at top, #0f2c1b 0%, var(--dark-bg) 70%); 
       color: #ffffff; 
       text-align: center; 
-      padding: 15px; 
+      padding: 12px; 
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* Logo Header */
-    .app-logo {
-      width: 100px;
-      height: 100px;
-      margin: 10px auto;
-      border-radius: 50%;
-      box-shadow: 0 0 25px rgba(0, 255, 56, 0.4);
-      border: 2px solid var(--neon-green);
-      object-fit: cover;
+    .profile-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 15px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 255, 56, 0.2);
+      margin-bottom: 10px;
     }
+    .user-info { display: flex; align-items: center; gap: 10px; text-align: left; }
+    .user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--neon-green); }
+    .user-name { font-weight: bold; font-size: 13px; }
+    .user-level { font-size: 10px; color: var(--gold); font-weight: 600; }
 
-    .app-title {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: var(--neon-green);
-      text-shadow: 0 0 10px rgba(0, 255, 56, 0.5);
-      margin-bottom: 15px;
-    }
-    .app-title span { color: var(--silver); }
-
-    /* Balance Box */
     .balance-container { 
       background: rgba(8, 45, 20, 0.6); 
       backdrop-filter: blur(12px); 
       width: 100%; 
-      max-width: 400px; 
-      margin: 0 auto 15px; 
-      padding: 18px; 
-      border-radius: 20px; 
+      margin: 0 auto 10px; 
+      padding: 12px; 
+      border-radius: 18px; 
       border: 1px solid rgba(0, 255, 56, 0.3);
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
-    .balance-title { font-size: 12px; color: var(--silver); letter-spacing: 1.5px; text-transform: uppercase; }
-    .balance-amount { font-size: 34px; font-weight: 800; color: var(--neon-green); margin-top: 5px; text-shadow: 0 0 15px rgba(0, 255, 56, 0.5); }
+    .balance-title { font-size: 10px; color: var(--silver); letter-spacing: 1.5px; text-transform: uppercase; }
+    .balance-amount { font-size: 30px; font-weight: 800; color: var(--neon-green); margin-top: 2px; text-shadow: 0 0 15px rgba(0, 255, 56, 0.5); }
 
-    /* Nav Tabs */
-    .nav-tabs { display: flex; width: 100%; max-width: 400px; justify-content: space-between; margin: 0 auto 15px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
-    .tab-btn { flex: 1; padding: 10px 2px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 12px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
-    .tab-btn.active { background: linear-gradient(135deg, var(--neon-green) 0%, #00a82d 100%); color: #000; box-shadow: 0 0 15px rgba(0, 255, 56, 0.4); }
+    .nav-tabs { display: flex; width: 100%; justify-content: space-around; margin: 0 auto 12px; background: rgba(0,0,0,0.5); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .tab-btn { flex: 1; padding: 8px 2px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 11px; border-radius: 8px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+    .tab-btn.active { background: linear-gradient(135deg, var(--neon-green) 0%, #00a82d 100%); color: #000; box-shadow: 0 0 12px rgba(0, 255, 56, 0.4); }
 
-    .section { display: none; width: 100%; max-width: 400px; margin: 0 auto; }
+    .section { display: none; width: 100%; margin: 0 auto; }
     .section.active { display: block; }
 
-    /* Wheel Section */
-    .wheel-container { position: relative; margin: 20px auto; width: 210px; height: 210px; }
-    .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #ffffff; filter: drop-shadow(0 0 8px var(--neon-green)); z-index: 10; }
-    .wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--neon-green); background: conic-gradient(var(--neon-green) 0deg 60deg, #061f0e 60deg 120deg, var(--silver) 120deg 180deg, #061f0e 180deg 240deg, var(--neon-green) 240deg 300deg, #061f0e 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); box-shadow: 0 0 20px rgba(0, 255, 56, 0.2); }
+    .tap-area { position: relative; margin: 15px auto; width: 170px; height: 170px; cursor: pointer; }
+    .tap-logo { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--neon-green); box-shadow: 0 0 25px rgba(0, 255, 56, 0.4); transition: transform 0.1s ease; object-fit: cover; }
+    .tap-logo:active { transform: scale(0.92); }
     
-    .action-btn { background: linear-gradient(135deg, var(--neon-green) 0%, #009929 100%); color: #000; border: none; padding: 14px 30px; font-weight: 800; border-radius: 30px; cursor: pointer; font-size: 15px; margin-top: 15px; width: 100%; box-shadow: 0 4px 20px rgba(0, 255, 56, 0.4); text-transform: uppercase; letter-spacing: 1px; }
+    .energy-bar-container { width: 100%; background: rgba(255, 255, 255, 0.1); height: 10px; border-radius: 10px; margin-top: 10px; overflow: hidden; border: 1px solid rgba(0,255,56,0.2); }
+    .energy-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #00ff38, #ffd700); transition: width 0.2s; }
+    .energy-text { font-size: 11px; margin-top: 4px; color: var(--silver); }
 
-    /* Cards & Inputs */
-    .card { background: rgba(255, 255, 255, 0.03); padding: 14px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 255, 56, 0.15); }
+    .float-num { position: absolute; color: var(--neon-green); font-size: 22px; font-weight: 800; animation: floatUp 0.8s ease-out forwards; pointer-events: none; }
+    @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
+
+    .wheel-container { position: relative; margin: 15px auto; width: 180px; height: 180px; }
+    .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #ffffff; filter: drop-shadow(0 0 8px var(--neon-green)); z-index: 10; }
+    .wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--neon-green); background: conic-gradient(var(--neon-green) 0deg 60deg, #061f0e 60deg 120deg, var(--silver) 120deg 180deg, #061f0e 180deg 240deg, var(--neon-green) 240deg 300deg, #061f0e 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); }
+    
+    .action-btn { background: linear-gradient(135deg, var(--neon-green) 0%, #009929 100%); color: #000; border: none; padding: 12px 20px; font-weight: 800; border-radius: 20px; cursor: pointer; font-size: 13px; margin-top: 10px; width: 100%; box-shadow: 0 4px 15px rgba(0, 255, 56, 0.4); text-transform: uppercase; }
+
+    .card { background: rgba(255, 255, 255, 0.03); padding: 10px 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 255, 56, 0.15); }
     .card-info { text-align: left; }
-    .card-title { font-size: 14px; font-weight: 600; color: #ffffff; }
-    .card-reward { font-size: 12px; color: var(--neon-green); font-weight: bold; margin-top: 2px; }
-    .small-btn { background: rgba(0, 255, 56, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 8px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; }
+    .card-title { font-size: 12px; font-weight: 600; color: #ffffff; }
+    .card-reward { font-size: 11px; color: var(--neon-green); font-weight: bold; margin-top: 2px; }
+    .small-btn { background: rgba(0, 255, 56, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
 
-    .input-box { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--neon-green); background: rgba(0,0,0,0.6); color: #fff; text-align: center; font-size: 14px; outline: none; }
-    
-    .admin-card { background: rgba(0, 0, 0, 0.6); padding: 12px; border-radius: 10px; border: 1px solid var(--neon-green); margin-bottom: 10px; text-align: left; font-size: 12px; }
+    .ad-card { border: 1px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
+    .ad-card .card-reward { color: var(--gold); }
+    .ad-btn { background: rgba(255, 215, 0, 0.15); color: var(--gold); border: 1px solid var(--gold); }
+
+    .input-box { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--neon-green); background: rgba(0,0,0,0.6); color: #fff; text-align: center; font-size: 12px; outline: none; }
+    .admin-card { background: rgba(0, 0, 0, 0.6); padding: 8px; border-radius: 8px; border: 1px solid var(--neon-green); margin-bottom: 8px; text-align: left; font-size: 11px; }
   </style>
 </head>
 <body>
 
-  <!-- Logo & Title -->
-  <img src="https://raw.githubusercontent.com/edene9059-bit/green-key/main/logo.jpg" class="app-logo" alt="Green Key Logo" onerror="this.style.display='none'">
-  <h1 class="app-title">GREEN <span>KEY</span></h1>
+  <!-- Profile Card -->
+  <div class="profile-card">
+    <div class="user-info">
+      <img src="logo.jpg" class="user-avatar" alt="Avatar">
+      <div>
+        <div class="user-name" id="user-display-name">Guest</div>
+        <div class="user-level" id="user-rank">Bronze Tier 🥉</div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Balance Box -->
   <div class="balance-container">
-    <div class="balance-title">የእርስዎ ያገኙት ነጥብ (Balance)</div>
+    <div class="balance-title">የነጥብ መጠን (Balance)</div>
     <div class="balance-amount"><span id="coins">0</span> 🪙</div>
   </div>
 
-  <!-- Nav Tabs -->
+  <!-- Navigation Tabs -->
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('spin', this)">Spin</button>
-    <button class="tab-btn" onclick="switchTab('daily', this)">Daily</button>
+    <button class="tab-btn active" onclick="switchTab('tap', this)">Tap</button>
+    <button class="tab-btn" onclick="switchTab('spin', this)">Spin</button>
     <button class="tab-btn" onclick="switchTab('tasks', this)">Tasks</button>
-    <button class="tab-btn" onclick="switchTab('ref', this)">Friends</button>
+    <button class="tab-btn" onclick="switchTab('top', this)">Top</button>
     <button class="tab-btn" onclick="switchTab('wallet', this)">Wallet</button>
-    <button class="tab-btn" onclick="switchTab('admin', this)" style="color:#ffd700;">Admin</button>
+    <button class="tab-btn" onclick="switchTab('admin', this)" style="color:var(--gold);">Admin</button>
   </div>
 
-  <!-- 1. Spin Section -->
-  <div id="spin" class="section active">
-    <h3>ዕድልዎን ይሞክሩ!</h3>
+  <!-- 1. Tap-to-Earn Section -->
+  <div id="tap" class="section active">
+    <div class="tap-area" id="tap-btn" onclick="handleTap(event)">
+      <img src="logo.jpg" class="tap-logo" alt="Green Key Tap">
+    </div>
+    <div class="energy-bar-container">
+      <div class="energy-fill" id="energy-fill"></div>
+    </div>
+    <div class="energy-text">⚡ Energy: <span id="energy-val">1000</span> / 1000</div>
+  </div>
+
+  <!-- 2. Spin Wheel Section -->
+  <div id="spin" class="section">
+    <h3 style="font-size:14px;">ዕድልዎን ይሞክሩ!</h3>
     <div class="wheel-container">
       <div class="wheel-pointer"></div>
       <div class="wheel" id="wheel"></div>
@@ -122,71 +146,76 @@
     <button class="action-btn" onclick="spinWheel()">SPIN NOW!</button>
   </div>
 
-  <!-- 2. Daily Reward -->
-  <div id="daily" class="section">
-    <h3>የቀን ስጦታ (Daily Bonus)</h3>
-    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">በየቀኑ እየገቡ ነፃ ነጥብ ይውሰዱ</p>
+  <!-- 3. Tasks & Ads Section -->
+  <div id="tasks" class="section">
+    <h3 style="font-size:14px; margin-bottom:8px;">ተግባራት እና ማስታወቂያዎች</h3>
+    
+    <!-- Adsgram / Watch Ad Section -->
+    <div class="card ad-card">
+      <div class="card-info">
+        <div class="card-title">🎬 ማስታወቂያ ይመልከቱ (Watch Ad)</div>
+        <div class="card-reward">+300 Coins</div>
+      </div>
+      <button class="small-btn ad-btn" onclick="watchAd(this)">Watch</button>
+    </div>
+
     <div class="card">
       <div class="card-info">
-        <div class="card-title">Day 1 Bonus</div>
+        <div class="card-title">የቀን ስጦታ (Daily Bonus)</div>
         <div class="card-reward">+200 Coins</div>
       </div>
       <button class="small-btn" id="daily-btn" onclick="claimDaily()">Claim</button>
     </div>
-  </div>
 
-  <!-- 3. Tasks Section -->
-  <div id="tasks" class="section">
-    <h3>ተግባራትን ያጠናቅቁ</h3>
-    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ቻናሎችን በመቀላቀል ተጨማሪ ነጥብ ያግኙ</p>
     <div class="card">
       <div class="card-info">
-        <div class="card-title">Telegram Channel የተቀላቀሉ</div>
+        <div class="card-title">Telegram ቻናል መቀላቀል</div>
         <div class="card-reward">+500 Coins</div>
       </div>
       <button class="small-btn" onclick="completeTask(this, 500)">Claim</button>
     </div>
-  </div>
 
-  <!-- 4. Friends / Referral Section -->
-  <div id="ref" class="section">
-    <h3>ጓደኞችን ይጋብዙ</h3>
-    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">በእርስዎ ሊንክ ለሚገባ እያንዳንዱ ሰው ነጥብ ያግኙ</p>
     <div class="card">
       <div class="card-info">
-        <div class="card-title">የእርስዎ የጋባዥነት ሊንክ</div>
-        <div class="card-reward">+1000 Coins per friend</div>
+        <div class="card-title">ጓደኛ መጋበዝ (Referral)</div>
+        <div class="card-reward">+1000 Coins / Friend</div>
       </div>
       <button class="small-btn" onclick="copyRef()">Copy Link</button>
     </div>
   </div>
 
-  <!-- 5. Wallet / Withdraw Section -->
-  <div id="wallet" class="section">
-    <h3>ገንዘብ ማውጫ (Wallet)</h3>
-    <p style="color: #a0aec0; margin-bottom: 12px; font-size: 12px;">ዝቅተኛው ማውጫ 10,000 Coins ነው</p>
-    <input type="text" id="payout-details" class="input-box" placeholder="የቴሌብር ወይም የባንክ አካውንት ያስገቡ">
-    <button class="action-btn" onclick="requestWithdraw()">ገንዘብ ለማውጣት ጠይቅ</button>
+  <!-- 4. Leaderboard -->
+  <div id="top" class="section">
+    <h3 style="font-size:14px; margin-bottom:8px;">ከፍተኛ ነጥብ ያላቸው (Top Players)</h3>
+    <div id="leaderboard-list"></div>
   </div>
 
-  <!-- 6. Admin Panel Section -->
+  <!-- 5. Wallet Section -->
+  <div id="wallet" class="section">
+    <h3 style="font-size:14px;">ገንዘብ ማውጫ (Wallet)</h3>
+    <p style="color: #a0aec0; margin: 4px 0 8px; font-size: 11px;">10,000 Coins = 100 Birr (Min Withdraw: 10,000)</p>
+    <input type="text" id="payout-details" class="input-box" placeholder="የቴሌብር ወይም የባንክ አካውንት ያስገቡ">
+    <button class="action-btn" onclick="requestWithdraw()">ገንዘብ ለማውጣት ጠይቅ</button>
+    
+    <h4 style="margin-top:15px; color:var(--neon-green); font-size:12px;">የማውጣት ታሪክ (History)</h4>
+    <div id="user-withdraw-history" style="margin-top:8px;"></div>
+  </div>
+
+  <!-- 6. Admin Panel -->
   <div id="admin" class="section">
-    <h3>Admin Dashboard</h3>
+    <h3 style="font-size:14px;">Admin Dashboard</h3>
     <div id="admin-login">
       <input type="password" id="admin-pass" class="input-box" placeholder="Admin PIN ያስገቡ">
       <button class="action-btn" onclick="checkAdmin()">ግበታ (Login)</button>
     </div>
-    <div id="admin-content" style="display: none; margin-top: 15px;">
-      <h4 style="color:var(--neon-green); margin-bottom: 10px;">የማውጫ ጥያቄዎች (Requests)</h4>
+    <div id="admin-content" style="display: none; margin-top: 10px;">
+      <h4 style="color:var(--neon-green); font-size:12px; margin-bottom:8px;">የማውጫ ጥያቄዎች</h4>
       <div id="withdrawal-list"></div>
     </div>
   </div>
 
   <script>
-    const firebaseConfig = {
-      databaseURL: "https://green-key-db-default-rtdb.firebaseio.com/"
-    };
-
+    const firebaseConfig = { databaseURL: "https://green-key-db-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
@@ -198,50 +227,44 @@
     const userName = user?.first_name || "Guest";
 
     let balance = 0;
+    let energy = 1000;
+    let maxEnergy = 1000;
     let isSpinning = false;
-    const ADMIN_PIN = "1234"; 
+    const ADMIN_PIN = "1234";
+
+    document.getElementById('user-display-name').innerText = userName;
 
     function loadUserData() {
-      database.ref('users/' + userId).once('value').then((snapshot) => {
+      database.ref('users/' + userId).on('value', (snapshot) => {
         if (snapshot.exists()) {
           balance = snapshot.val().score || 0;
         } else {
           balance = 0;
           saveUserData(balance);
-          checkReferral();
         }
         document.getElementById('coins').innerText = balance;
+        updateRank();
       });
     }
 
-    function checkReferral() {
-      const startParam = tg?.initDataUnsafe?.start_param;
-      if (startParam && startParam !== userId.toString()) {
-        database.ref('users/' + startParam).once('value').then((snapshot) => {
-          if (snapshot.exists()) {
-            const currentScore = snapshot.val().score || 0;
-            database.ref('users/' + startParam).update({ score: currentScore + 1000 });
-          }
-        });
-      }
+    function updateRank() {
+      let rankText = "Bronze Tier 🥉";
+      if (balance >= 50000) rankText = "Diamond Tier 💎";
+      else if (balance >= 20000) rankText = "Gold Tier 🥇";
+      else if (balance >= 5000) rankText = "Silver Tier 🥈";
+      document.getElementById('user-rank').innerText = rankText;
     }
 
     function saveUserData(newBalance) {
-      database.ref('users/' + userId).set({
+      database.ref('users/' + userId).update({
         name: userName,
         score: newBalance,
         lastUpdated: new Date().toISOString()
       });
     }
 
-    function updateBalance(amount) {
-      balance += amount;
-      document.getElementById('coins').innerText = balance;
-      saveUserData(balance);
-    }
-
     function triggerHaptic() {
-      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+      if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
     }
 
     function switchTab(tabId, btn) {
@@ -250,6 +273,50 @@
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
+
+      if (tabId === 'top') loadLeaderboard();
+      if (tabId === 'wallet') loadUserHistory();
+    }
+
+    function handleTap(e) {
+      if (energy <= 0) return;
+      triggerHaptic();
+
+      balance += 1;
+      energy -= 1;
+      
+      document.getElementById('coins').innerText = balance;
+      document.getElementById('energy-val').innerText = energy;
+      document.getElementById('energy-fill').style.width = (energy / maxEnergy * 100) + '%';
+
+      let floatNum = document.createElement('div');
+      floatNum.className = 'float-num';
+      floatNum.innerText = '+1';
+      floatNum.style.left = (e.clientX - 10) + 'px';
+      floatNum.style.top = (e.clientY - 20) + 'px';
+      document.body.appendChild(floatNum);
+
+      setTimeout(() => floatNum.remove(), 800);
+      saveUserData(balance);
+    }
+
+    setInterval(() => {
+      if (energy < maxEnergy) {
+        energy += 2;
+        if (energy > maxEnergy) energy = maxEnergy;
+        document.getElementById('energy-val').innerText = energy;
+        document.getElementById('energy-fill').style.width = (energy / maxEnergy * 100) + '%';
+      }
+    }, 1000);
+
+    function watchAd(btn) {
+      triggerHaptic();
+      alert("ማስታወቂያ በመጫን ላይ ይገኛል...");
+      setTimeout(() => {
+        balance += 300;
+        saveUserData(balance);
+        alert("ማስታወቂያውን ስለተመለከቱ +300 Coins አግኝተዋል!");
+      }, 2000);
     }
 
     function spinWheel() {
@@ -263,41 +330,33 @@
 
       setTimeout(() => {
         let wonCoins = Math.floor(Math.random() * 100) + 50;
-        updateBalance(wonCoins);
+        balance += wonCoins;
+        saveUserData(balance);
         triggerHaptic();
-        alert(`እንኳን ደስ አለዎት! ${wonCoins} ነጥብ አግኝተዋል!`);
+        alert(`እንኳን ደስ አለዎት! ${wonCoins} Coins አግኝተዋል!`);
         isSpinning = false;
       }, 3000);
     }
 
-    function claimDaily() {
-      triggerHaptic();
-      let lastClaim = localStorage.getItem('last_daily');
-      let today = new Date().toDateString();
+    function loadLeaderboard() {
+      const list = document.getElementById('leaderboard-list');
+      database.ref('users').orderByChild('score').limitToLast(10).once('value', (snapshot) => {
+        list.innerHTML = '';
+        let players = [];
+        snapshot.forEach(child => { players.push(child.val()); });
+        players.reverse();
 
-      if (lastClaim === today) {
-        alert("የዛሬውን የቀን ስጦታ ተቀብለዋል!");
-      } else {
-        updateBalance(200);
-        localStorage.setItem('last_daily', today);
-        document.getElementById('daily-btn').innerText = "Done ✓";
-        document.getElementById('daily-btn').disabled = true;
-        alert("200 Coins በነፃ አግኝተዋል!");
-      }
-    }
-
-    function completeTask(btn, reward) {
-      triggerHaptic();
-      updateBalance(reward);
-      btn.innerText = "Done ✓";
-      btn.disabled = true;
-    }
-
-    function copyRef() {
-      triggerHaptic();
-      const refLink = `https://t.me/greenkeybot?start=${userId}`;
-      navigator.clipboard.writeText(refLink);
-      alert("የእርስዎ የጋባዥነት ሊንክ Copy ሆኗል!\n" + refLink);
+        players.forEach((p, idx) => {
+          list.innerHTML += `
+            <div class="card">
+              <div class="card-info">
+                <div class="card-title">#${idx + 1} ${p.name}</div>
+              </div>
+              <div class="card-reward">${p.score} 🪙</div>
+            </div>
+          `;
+        });
+      });
     }
 
     function requestWithdraw() {
@@ -309,7 +368,7 @@
         return;
       }
       if (!payoutInput) {
-        alert("እባክዎን የቴሌብር ወይም የባንክ አካውንት ቁጥር ያስገቡ!");
+        alert("እባክዎን የቴሌብር ወይም የባንክ አካውንት ያስገቡ!");
         return;
       }
 
@@ -318,22 +377,76 @@
         userName: userName,
         accountDetails: payoutInput,
         amount: 10000,
+        status: "Pending ⏳",
         date: new Date().toLocaleDateString()
       }).then(() => {
-        updateBalance(-10000);
+        balance -= 10000;
+        saveUserData(balance);
         document.getElementById('payout-details').value = '';
         alert("የማውጣት ጥያቄዎ በተሳካ ሁኔታ ተልኳል!");
+        loadUserHistory();
       });
     }
 
+    function loadUserHistory() {
+      const histDiv = document.getElementById('user-withdraw-history');
+      database.ref('withdrawals').orderByChild('userId').equalTo(userId).once('value', (snapshot) => {
+        histDiv.innerHTML = '';
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            let data = child.val();
+            histDiv.innerHTML += `
+              <div class="card">
+                <div class="card-info">
+                  <div class="card-title">10,000 Coins (100 ETB)</div>
+                  <div style="font-size:10px; color:#aaa;">${data.date}</div>
+                </div>
+                <div style="color:var(--gold); font-size:11px; font-weight:bold;">${data.status}</div>
+              </div>
+            `;
+          });
+        } else {
+          histDiv.innerHTML = '<p style="font-size:11px; color:#aaa;">ምንም የማውጣት ታሪክ የለም።</p>';
+        }
+      });
+    }
+
+    function claimDaily() {
+      let lastClaim = localStorage.getItem('last_daily');
+      let today = new Date().toDateString();
+
+      if (lastClaim === today) {
+        alert("የዛሬውን የቀን ስጦታ ተቀብለዋል!");
+      } else {
+        balance += 200;
+        saveUserData(balance);
+        localStorage.setItem('last_daily', today);
+        document.getElementById('daily-btn').innerText = "Done ✓";
+        document.getElementById('daily-btn').disabled = true;
+        alert("200 Coins በነፃ አግኝተዋል!");
+      }
+    }
+
+    function completeTask(btn, reward) {
+      balance += reward;
+      saveUserData(balance);
+      btn.innerText = "Done ✓";
+      btn.disabled = true;
+    }
+
+    function copyRef() {
+      const refLink = `https://t.me/greenkeybot?start=${userId}`;
+      navigator.clipboard.writeText(refLink);
+      alert("የጋባዥነት ሊንክዎ Copy ሆኗል!\n" + refLink);
+    }
+
     function checkAdmin() {
-      const inputPin = document.getElementById('admin-pass').value;
-      if (inputPin === ADMIN_PIN) {
+      if (document.getElementById('admin-pass').value === ADMIN_PIN) {
         document.getElementById('admin-login').style.display = 'none';
         document.getElementById('admin-content').style.display = 'block';
         loadAdminData();
       } else {
-        alert("የተሳሳተ Admin PIN ነው!");
+        alert("የተሳሳተ Admin PIN!");
       }
     }
 
@@ -349,12 +462,12 @@
                 <b>ስም:</b> ${data.userName}<br>
                 <b>አካውንት:</b> ${data.accountDetails}<br>
                 <b>መጠን:</b> ${data.amount} Coins<br>
-                <b>ቀን:</b> ${data.date}
+                <b>ሁኔታ:</b> ${data.status}
               </div>
             `;
           });
         } else {
-          listDiv.innerHTML = '<p style="font-size:12px; color:#aaa;">ምንም ጥያቄ የለም።</p>';
+          listDiv.innerHTML = '<p style="font-size:11px; color:#aaa;">ምንም ጥያቄ የለም።</p>';
         }
       });
     }
