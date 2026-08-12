@@ -3,102 +3,318 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Green Key Mini App</title>
+  <title>Green Key Mini App - Ultra Pro</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
+  <!-- Adsgram SDK -->
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
     :root {
-      --neon-green: #00ff38;
-      --deep-green: #082d14;
-      --silver: #e2e8f0;
-      --dark-bg: #050a07;
-      --gold: #ffd700;
+      --neon-green: #00ff88;
+      --glow-green: rgba(0, 255, 136, 0.4);
+      --dark-bg: #0b0f12;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --gold: #ffcc00;
+      --text-muted: #94a3b8;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; user-select: none; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+      user-select: none; 
+      -webkit-tap-highlight-color: transparent;
+    }
     
     body { 
-      background: radial-gradient(circle at top, #0f2c1b 0%, var(--dark-bg) 70%); 
+      background: radial-gradient(circle at top center, #14281d 0%, var(--dark-bg) 70%);
       color: #ffffff; 
       text-align: center; 
-      padding: 12px; 
+      padding: 16px 16px 80px 16px; 
       min-height: 100vh;
       overflow-x: hidden;
     }
 
+    /* Top User Profile */
     .profile-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 10px 15px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 255, 56, 0.2);
-      margin-bottom: 10px;
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 15px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     }
-    .user-info { display: flex; align-items: center; gap: 10px; text-align: left; }
-    .user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--neon-green); }
-    .user-name { font-weight: bold; font-size: 13px; }
-    .user-level { font-size: 10px; color: var(--gold); font-weight: 600; }
+    .user-info { display: flex; align-items: center; gap: 12px; text-align: left; }
+    .user-avatar { 
+      width: 42px; 
+      height: 42px; 
+      border-radius: 50%; 
+      border: 2px solid var(--neon-green); 
+      box-shadow: 0 0 10px var(--glow-green);
+    }
+    .user-name { font-weight: 700; font-size: 14px; color: #fff; }
+    .user-level { font-size: 11px; color: var(--gold); font-weight: 600; }
 
+    /* Balance Section */
     .balance-container { 
-      background: rgba(8, 45, 20, 0.6); 
-      backdrop-filter: blur(12px); 
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+      backdrop-filter: blur(20px);
       width: 100%; 
-      margin: 0 auto 10px; 
-      padding: 12px; 
-      border-radius: 18px; 
-      border: 1px solid rgba(0, 255, 56, 0.3);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      margin: 0 auto 15px; 
+      padding: 16px; 
+      border-radius: 24px; 
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    .balance-title { font-size: 10px; color: var(--silver); letter-spacing: 1.5px; text-transform: uppercase; }
-    .balance-amount { font-size: 30px; font-weight: 800; color: var(--neon-green); margin-top: 2px; text-shadow: 0 0 15px rgba(0, 255, 56, 0.5); }
+    .balance-title { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+    .balance-amount { 
+      font-size: 36px; 
+      font-weight: 900; 
+      color: #ffffff; 
+      margin-top: 4px; 
+      text-shadow: 0 0 20px var(--glow-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .passive-rate { font-size: 12px; color: var(--gold); margin-top: 6px; font-weight: 500; }
 
-    .nav-tabs { display: flex; width: 100%; justify-content: space-around; margin: 0 auto 12px; background: rgba(0,0,0,0.5); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .tab-btn { flex: 1; padding: 8px 2px; border: none; background: transparent; color: #8f9b93; font-weight: bold; font-size: 11px; border-radius: 8px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
-    .tab-btn.active { background: linear-gradient(135deg, var(--neon-green) 0%, #00a82d 100%); color: #000; box-shadow: 0 0 12px rgba(0, 255, 56, 0.4); }
+    /* Floating Navigation Bar at Bottom */
+    .bottom-nav {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 420px;
+      background: rgba(18, 26, 22, 0.85);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 6px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      z-index: 1000;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .tab-btn.active {
+      background: var(--neon-green);
+      color: #000;
+      box-shadow: 0 0 15px var(--glow-green);
+    }
 
-    .section { display: none; width: 100%; margin: 0 auto; }
+    /* Tab Content Areas */
+    .section { display: none; width: 100%; animation: fadeIn 0.3s ease-in-out; }
     .section.active { display: block; }
 
-    .tap-area { position: relative; margin: 15px auto; width: 170px; height: 170px; cursor: pointer; }
-    .tap-logo { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--neon-green); box-shadow: 0 0 25px rgba(0, 255, 56, 0.4); transition: transform 0.1s ease; object-fit: cover; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tap Button & Animation */
+    .tap-area { 
+      position: relative; 
+      margin: 25px auto; 
+      width: 200px; 
+      height: 200px; 
+      cursor: pointer; 
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tap-logo-outer {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,255,136,0.2) 0%, transparent 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+      100% { box-shadow: 0 0 45px rgba(0, 255, 136, 0.6); }
+    }
+    .tap-logo { 
+      width: 82%; 
+      height: 82%; 
+      border-radius: 50%; 
+      border: 4px solid var(--neon-green); 
+      transition: transform 0.08s ease; 
+      object-fit: cover; 
+    }
     .tap-logo:active { transform: scale(0.92); }
     
-    .energy-bar-container { width: 100%; background: rgba(255, 255, 255, 0.1); height: 10px; border-radius: 10px; margin-top: 10px; overflow: hidden; border: 1px solid rgba(0,255,56,0.2); }
-    .energy-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #00ff38, #ffd700); transition: width 0.2s; }
-    .energy-text { font-size: 11px; margin-top: 4px; color: var(--silver); }
+    /* Energy Bar */
+    .energy-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 10px 16px;
+      border-radius: 16px;
+      margin-top: 15px;
+    }
+    .energy-bar-container { 
+      width: 100%; 
+      background: rgba(255, 255, 255, 0.08); 
+      height: 12px; 
+      border-radius: 10px; 
+      margin-top: 6px; 
+      overflow: hidden; 
+    }
+    .energy-fill { 
+      width: 100%; 
+      height: 100%; 
+      background: linear-gradient(90deg, var(--neon-green), var(--gold)); 
+      transition: width 0.2s ease; 
+      border-radius: 10px;
+    }
+    .energy-text { font-size: 12px; color: var(--text-muted); font-weight: 600; display: flex; justify-content: space-between; }
 
-    .float-num { position: absolute; color: var(--neon-green); font-size: 22px; font-weight: 800; animation: floatUp 0.8s ease-out forwards; pointer-events: none; }
-    @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
+    /* Number Float Animation */
+    .float-num { 
+      position: absolute; 
+      color: var(--neon-green); 
+      font-size: 28px; 
+      font-weight: 900; 
+      animation: floatUp 0.7s ease-out forwards; 
+      pointer-events: none; 
+      text-shadow: 0 0 10px var(--neon-green);
+    }
+    @keyframes floatUp { 
+      0% { opacity: 1; transform: translateY(0) scale(1); } 
+      100% { opacity: 0; transform: translateY(-50px) scale(1.3); } 
+    }
 
-    .wheel-container { position: relative; margin: 15px auto; width: 180px; height: 180px; }
-    .wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #ffffff; filter: drop-shadow(0 0 8px var(--neon-green)); z-index: 10; }
-    .wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--neon-green); background: conic-gradient(var(--neon-green) 0deg 60deg, #061f0e 60deg 120deg, var(--silver) 120deg 180deg, #061f0e 180deg 240deg, var(--neon-green) 240deg 300deg, #061f0e 300deg 360deg); transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1); }
-    
-    .action-btn { background: linear-gradient(135deg, var(--neon-green) 0%, #009929 100%); color: #000; border: none; padding: 12px 20px; font-weight: 800; border-radius: 20px; cursor: pointer; font-size: 13px; margin-top: 10px; width: 100%; box-shadow: 0 4px 15px rgba(0, 255, 56, 0.4); text-transform: uppercase; }
-
-    .card { background: rgba(255, 255, 255, 0.03); padding: 10px 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0, 255, 56, 0.15); }
+    /* Modern Glass Cards */
+    .card { 
+      background: var(--card-bg); 
+      backdrop-filter: blur(10px);
+      padding: 14px 16px; 
+      border-radius: 18px; 
+      margin-bottom: 10px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      border: 1px solid var(--card-border); 
+    }
     .card-info { text-align: left; }
-    .card-title { font-size: 12px; font-weight: 600; color: #ffffff; }
-    .card-reward { font-size: 11px; color: var(--neon-green); font-weight: bold; margin-top: 2px; }
-    .small-btn { background: rgba(0, 255, 56, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; }
+    .card-title { font-size: 13px; font-weight: 700; color: #ffffff; }
+    .card-reward { font-size: 11px; color: var(--neon-green); font-weight: 700; margin-top: 3px; }
+    
+    .action-btn { 
+      background: linear-gradient(135deg, var(--neon-green) 0%, #00b359 100%); 
+      color: #000; 
+      border: none; 
+      padding: 14px 20px; 
+      font-weight: 800; 
+      border-radius: 16px; 
+      cursor: pointer; 
+      font-size: 13px; 
+      margin-top: 10px; 
+      width: 100%; 
+      box-shadow: 0 6px 20px var(--glow-green); 
+      text-transform: uppercase; 
+      letter-spacing: 1px;
+    }
+    .small-btn { 
+      background: rgba(0, 255, 136, 0.12); 
+      color: var(--neon-green); 
+      border: 1px solid var(--neon-green); 
+      padding: 8px 14px; 
+      border-radius: 12px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      font-size: 11px; 
+    }
 
-    .ad-card { border: 1px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
-    .ad-card .card-reward { color: var(--gold); }
-    .ad-btn { background: rgba(255, 215, 0, 0.15); color: var(--gold); border: 1px solid var(--gold); }
+    /* Spin Wheel UI */
+    .wheel-box { 
+      position: relative; 
+      width: 200px; 
+      height: 200px; 
+      margin: 20px auto; 
+      border-radius: 50%; 
+      border: 6px solid var(--gold); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background: radial-gradient(circle, #1a3c27, #050a07); 
+      box-shadow: 0 0 30px rgba(255,215,0,0.3); 
+    }
+    .wheel-center { 
+      width: 50px; 
+      height: 50px; 
+      background: var(--gold); 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: 900; 
+      color: #000; 
+      font-size: 12px; 
+      box-shadow: 0 0 15px var(--gold);
+    }
 
-    .input-box { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--neon-green); background: rgba(0,0,0,0.6); color: #fff; text-align: center; font-size: 12px; outline: none; }
-    .admin-card { background: rgba(0, 0, 0, 0.6); padding: 8px; border-radius: 8px; border: 1px solid var(--neon-green); margin-bottom: 8px; text-align: left; font-size: 11px; }
+    /* Combo Grid */
+    .combo-grid { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .combo-card { 
+      flex: 1; 
+      background: var(--card-bg); 
+      padding: 16px 8px; 
+      border-radius: 16px; 
+      border: 1px dashed var(--gold); 
+      font-size: 11px; 
+      font-weight: bold;
+      cursor: pointer; 
+    }
+
+    .input-box { 
+      width: 100%; 
+      padding: 12px; 
+      margin: 8px 0; 
+      border-radius: 12px; 
+      border: 1px solid var(--card-border); 
+      background: rgba(0,0,0,0.5); 
+      color: #fff; 
+      text-align: center; 
+      font-size: 13px; 
+      outline: none; 
+    }
   </style>
 </head>
 <body>
 
-  <!-- Profile Card -->
+  <!-- Top Profile Header -->
   <div class="profile-card">
     <div class="user-info">
       <img src="logo.jpg" class="user-avatar" alt="Avatar">
@@ -109,54 +325,92 @@
     </div>
   </div>
 
-  <!-- Balance Box -->
+  <!-- Balance Card -->
   <div class="balance-container">
-    <div class="balance-title">የነጥብ መጠን (Balance)</div>
-    <div class="balance-amount"><span id="coins">0</span> 🪙</div>
+    <div class="balance-title">የነጥብ መጠን (BALANCE)</div>
+    <div class="balance-amount">
+      <span>🪙</span> <span id="coins">0</span>
+    </div>
+    <div class="passive-rate">⚡ Auto-Profit: <span id="auto-rate">0</span>/hr | Tap: +<span id="tap-power">1</span></div>
   </div>
 
-  <!-- Navigation Tabs -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('tap', this)">Tap</button>
-    <button class="tab-btn" onclick="switchTab('spin', this)">Spin</button>
-    <button class="tab-btn" onclick="switchTab('tasks', this)">Tasks</button>
-    <button class="tab-btn" onclick="switchTab('top', this)">Top</button>
-    <button class="tab-btn" onclick="switchTab('wallet', this)">Wallet</button>
-    <button class="tab-btn" onclick="switchTab('admin', this)" style="color:var(--gold);">Admin</button>
-  </div>
-
-  <!-- 1. Tap-to-Earn Section -->
+  <!-- 1. Tap Section -->
   <div id="tap" class="section active">
-    <div class="tap-area" id="tap-btn" onclick="handleTap(event)">
-      <img src="logo.jpg" class="tap-logo" alt="Green Key Tap">
+    <div class="tap-area" onclick="handleTap(event)">
+      <div class="tap-logo-outer">
+        <img src="logo.jpg" class="tap-logo" alt="Green Key Tap">
+      </div>
     </div>
-    <div class="energy-bar-container">
-      <div class="energy-fill" id="energy-fill"></div>
+    
+    <div class="energy-container">
+      <div class="energy-text">
+        <span>⚡ Energy</span>
+        <span><span id="energy-val">1000</span> / 1000</span>
+      </div>
+      <div class="energy-bar-container">
+        <div class="energy-fill" id="energy-fill"></div>
+      </div>
     </div>
-    <div class="energy-text">⚡ Energy: <span id="energy-val">1000</span> / 1000</div>
   </div>
 
   <!-- 2. Spin Wheel Section -->
   <div id="spin" class="section">
-    <h3 style="font-size:14px;">ዕድልዎን ይሞክሩ!</h3>
-    <div class="wheel-container">
-      <div class="wheel-pointer"></div>
-      <div class="wheel" id="wheel"></div>
+    <h3 style="font-size:16px; margin-bottom:4px;">🎡 እድልዎን ይሞክሩ (Spin & Win)</h3>
+    <p style="font-size:12px; color:var(--text-muted);">በቀን እስከ 5,000 Coins ማሸነፍ ይችላሉ!</p>
+    
+    <div class="wheel-box">
+      <div class="wheel-center">SPIN</div>
     </div>
-    <button class="action-btn" onclick="spinWheel()">SPIN NOW!</button>
+    
+    <button class="action-btn" id="spin-btn" onclick="spinWheel()">ሀብትዎን ይሞክሩ (3/3)</button>
   </div>
 
-  <!-- 3. Tasks & Ads Section -->
-  <div id="tasks" class="section">
-    <h3 style="font-size:14px; margin-bottom:8px;">ተግባራት እና ማስታወቂያዎች</h3>
+  <!-- 3. Daily Combo & Cipher -->
+  <div id="combo" class="section">
+    <h3 style="font-size:15px; margin-bottom:10px;">🧩 የቀኑ ምስጢራዊ ካርዶች (Combo)</h3>
+    <div class="combo-grid">
+      <div class="combo-card" onclick="selectCombo(1)">Card 1 ❓</div>
+      <div class="combo-card" onclick="selectCombo(2)">Card 2 ❓</div>
+      <div class="combo-card" onclick="selectCombo(3)">Card 3 ❓</div>
+    </div>
+    <p style="font-size:11px; color:var(--gold); margin-bottom:15px;">ትክክለኛዎቹን ካርዶች በመምረጥ +10,000 Coins ያግኙ!</p>
+
+    <h3 style="font-size:15px; margin-bottom:6px;">🔐 የቀኑ ምስጢራዊ ኮድ (Cipher)</h3>
+    <input type="text" id="cipher-code" class="input-box" placeholder="ምስጢራዊ ኮዱን ያስገቡ">
+    <button class="action-btn" onclick="claimCipher()">ኮድ አረጋግጥ (+2,000 Coins)</button>
+  </div>
+
+  <!-- 4. Boost & Mining -->
+  <div id="boost" class="section">
+    <h3 style="font-size:15px; margin-bottom:12px;">የመጫወት አቅም ማሳደጊያዎች</h3>
     
-    <!-- Adsgram / Watch Ad Section -->
-    <div class="card ad-card">
+    <div class="card">
       <div class="card-info">
-        <div class="card-title">🎬 ማስታወቂያ ይመልከቱ (Watch Ad)</div>
+        <div class="card-title">⚡ Multi-Tap Booster</div>
+        <div class="card-reward">+1 Extra Coin per Tap</div>
+      </div>
+      <button class="small-btn" onclick="buyMultiTap()">1,500 🪙</button>
+    </div>
+
+    <div class="card">
+      <div class="card-info">
+        <div class="card-title">🤖 Auto Miner Bot v1</div>
+        <div class="card-reward">+100 Coins / Hour</div>
+      </div>
+      <button class="small-btn" onclick="buyUpgrade('bot1', 1000, 100)">1,000 🪙</button>
+    </div>
+  </div>
+
+  <!-- 5. Tasks -->
+  <div id="tasks" class="section">
+    <h3 style="font-size:15px; margin-bottom:10px;">ተግባራት እና ማስታወቂያዎች</h3>
+    
+    <div class="card">
+      <div class="card-info">
+        <div class="card-title">🎬 ማስታወቂያ ይመልከቱ (Adsgram)</div>
         <div class="card-reward">+300 Coins</div>
       </div>
-      <button class="small-btn ad-btn" onclick="watchAd(this)">Watch</button>
+      <button class="small-btn" onclick="watchAdsgramAd()">Watch Ad</button>
     </div>
 
     <div class="card">
@@ -164,15 +418,7 @@
         <div class="card-title">የቀን ስጦታ (Daily Bonus)</div>
         <div class="card-reward">+200 Coins</div>
       </div>
-      <button class="small-btn" id="daily-btn" onclick="claimDaily()">Claim</button>
-    </div>
-
-    <div class="card">
-      <div class="card-info">
-        <div class="card-title">Telegram ቻናል መቀላቀል</div>
-        <div class="card-reward">+500 Coins</div>
-      </div>
-      <button class="small-btn" onclick="completeTask(this, 500)">Claim</button>
+      <button class="small-btn" onclick="claimDaily()">Claim</button>
     </div>
 
     <div class="card">
@@ -184,34 +430,22 @@
     </div>
   </div>
 
-  <!-- 4. Leaderboard -->
-  <div id="top" class="section">
-    <h3 style="font-size:14px; margin-bottom:8px;">ከፍተኛ ነጥብ ያላቸው (Top Players)</h3>
-    <div id="leaderboard-list"></div>
-  </div>
-
-  <!-- 5. Wallet Section -->
+  <!-- 6. Wallet -->
   <div id="wallet" class="section">
-    <h3 style="font-size:14px;">ገንዘብ ማውጫ (Wallet)</h3>
-    <p style="color: #a0aec0; margin: 4px 0 8px; font-size: 11px;">10,000 Coins = 100 Birr (Min Withdraw: 10,000)</p>
+    <h3 style="font-size:15px; margin-bottom:6px;">ገንዘብ ማውጫ (Wallet)</h3>
+    <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 12px;">10,000 Coins = 100 ETB</p>
     <input type="text" id="payout-details" class="input-box" placeholder="የቴሌብር ወይም የባንክ አካውንት ያስገቡ">
     <button class="action-btn" onclick="requestWithdraw()">ገንዘብ ለማውጣት ጠይቅ</button>
-    
-    <h4 style="margin-top:15px; color:var(--neon-green); font-size:12px;">የማውጣት ታሪክ (History)</h4>
-    <div id="user-withdraw-history" style="margin-top:8px;"></div>
   </div>
 
-  <!-- 6. Admin Panel -->
-  <div id="admin" class="section">
-    <h3 style="font-size:14px;">Admin Dashboard</h3>
-    <div id="admin-login">
-      <input type="password" id="admin-pass" class="input-box" placeholder="Admin PIN ያስገቡ">
-      <button class="action-btn" onclick="checkAdmin()">ግበታ (Login)</button>
-    </div>
-    <div id="admin-content" style="display: none; margin-top: 10px;">
-      <h4 style="color:var(--neon-green); font-size:12px; margin-bottom:8px;">የማውጫ ጥያቄዎች</h4>
-      <div id="withdrawal-list"></div>
-    </div>
+  <!-- Bottom Navigation Bar -->
+  <div class="bottom-nav">
+    <button class="tab-btn active" onclick="switchTab('tap', this)"><span>👆</span>Tap</button>
+    <button class="tab-btn" onclick="switchTab('spin', this)"><span>🎡</span>Spin</button>
+    <button class="tab-btn" onclick="switchTab('combo', this)"><span>🧩</span>Combo</button>
+    <button class="tab-btn" onclick="switchTab('boost', this)"><span>🚀</span>Boost</button>
+    <button class="tab-btn" onclick="switchTab('tasks', this)"><span>📋</span>Tasks</button>
+    <button class="tab-btn" onclick="switchTab('wallet', this)"><span>💳</span>Wallet</button>
   </div>
 
   <script>
@@ -227,10 +461,11 @@
     const userName = user?.first_name || "Guest";
 
     let balance = 0;
+    let autoRate = 0;
+    let tapPower = 1;
     let energy = 1000;
     let maxEnergy = 1000;
-    let isSpinning = false;
-    const ADMIN_PIN = "1234";
+    let spinCount = 3;
 
     document.getElementById('user-display-name').innerText = userName;
 
@@ -238,27 +473,23 @@
       database.ref('users/' + userId).on('value', (snapshot) => {
         if (snapshot.exists()) {
           balance = snapshot.val().score || 0;
+          autoRate = snapshot.val().autoRate || 0;
+          tapPower = snapshot.val().tapPower || 1;
         } else {
-          balance = 0;
-          saveUserData(balance);
+          saveUserData(0);
         }
         document.getElementById('coins').innerText = balance;
-        updateRank();
+        document.getElementById('auto-rate').innerText = autoRate;
+        document.getElementById('tap-power').innerText = tapPower;
       });
-    }
-
-    function updateRank() {
-      let rankText = "Bronze Tier 🥉";
-      if (balance >= 50000) rankText = "Diamond Tier 💎";
-      else if (balance >= 20000) rankText = "Gold Tier 🥇";
-      else if (balance >= 5000) rankText = "Silver Tier 🥈";
-      document.getElementById('user-rank').innerText = rankText;
     }
 
     function saveUserData(newBalance) {
       database.ref('users/' + userId).update({
         name: userName,
         score: newBalance,
+        autoRate: autoRate,
+        tapPower: tapPower,
         lastUpdated: new Date().toISOString()
       });
     }
@@ -273,16 +504,13 @@
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
-
-      if (tabId === 'top') loadLeaderboard();
-      if (tabId === 'wallet') loadUserHistory();
     }
 
     function handleTap(e) {
       if (energy <= 0) return;
       triggerHaptic();
 
-      balance += 1;
+      balance += tapPower;
       energy -= 1;
       
       document.getElementById('coins').innerText = balance;
@@ -291,16 +519,59 @@
 
       let floatNum = document.createElement('div');
       floatNum.className = 'float-num';
-      floatNum.innerText = '+1';
+      floatNum.innerText = '+' + tapPower;
       floatNum.style.left = (e.clientX - 10) + 'px';
       floatNum.style.top = (e.clientY - 20) + 'px';
       document.body.appendChild(floatNum);
 
-      setTimeout(() => floatNum.remove(), 800);
+      setTimeout(() => floatNum.remove(), 700);
       saveUserData(balance);
     }
 
+    function spinWheel() {
+      if (spinCount <= 0) {
+        alert("የዛሬውን እድልዎን ጨርሰዋል!");
+        return;
+      }
+      triggerHaptic();
+      spinCount--;
+      document.getElementById('spin-btn').innerText = `ሀብትዎን ይሞክሩ (${spinCount}/3)`;
+      
+      const prizes = [500, 1000, 2000, 5000, 100];
+      const win = prizes[Math.floor(Math.random() * prizes.length)];
+      
+      balance += win;
+      saveUserData(balance);
+      alert(`🎉 እንኳን ደስ አለዎት! ${win} Coins አሸንፈዋል!`);
+    }
+
+    function buyMultiTap() {
+      if (balance >= 1500) {
+        balance -= 1500;
+        tapPower += 1;
+        saveUserData(balance);
+        alert("Multi-Tap ተሻሽሏል!");
+      } else {
+        alert("በቂ ነጥብ የለዎትም!");
+      }
+    }
+
+    function claimCipher() {
+      const input = document.getElementById('cipher-code').value.trim().toUpperCase();
+      if (input === "GREEN2026") {
+        balance += 2000;
+        saveUserData(balance);
+        alert("ትክክለኛ ኮድ! +2,000 Coins አግኝተዋል!");
+      } else {
+        alert("የተሳሳተ ኮድ!");
+      }
+    }
+
     setInterval(() => {
+      if (autoRate > 0) {
+        balance += Math.round(autoRate / 3600);
+        document.getElementById('coins').innerText = balance;
+      }
       if (energy < maxEnergy) {
         energy += 2;
         if (energy > maxEnergy) energy = maxEnergy;
@@ -309,167 +580,41 @@
       }
     }, 1000);
 
-    function watchAd(btn) {
-      triggerHaptic();
-      alert("ማስታወቂያ በመጫን ላይ ይገኛል...");
-      setTimeout(() => {
-        balance += 300;
+    function buyUpgrade(type, cost, rate) {
+      if (balance >= cost) {
+        balance -= cost;
+        autoRate += rate;
         saveUserData(balance);
-        alert("ማስታወቂያውን ስለተመለከቱ +300 Coins አግኝተዋል!");
-      }, 2000);
-    }
-
-    function spinWheel() {
-      if (isSpinning) return;
-      triggerHaptic();
-      isSpinning = true;
-
-      let randomRot = Math.floor(Math.random() * 360) + 1440;
-      let wheel = document.getElementById('wheel');
-      wheel.style.transform = `rotate(${randomRot}deg)`;
-
-      setTimeout(() => {
-        let wonCoins = Math.floor(Math.random() * 100) + 50;
-        balance += wonCoins;
-        saveUserData(balance);
-        triggerHaptic();
-        alert(`እንኳን ደስ አለዎት! ${wonCoins} Coins አግኝተዋል!`);
-        isSpinning = false;
-      }, 3000);
-    }
-
-    function loadLeaderboard() {
-      const list = document.getElementById('leaderboard-list');
-      database.ref('users').orderByChild('score').limitToLast(10).once('value', (snapshot) => {
-        list.innerHTML = '';
-        let players = [];
-        snapshot.forEach(child => { players.push(child.val()); });
-        players.reverse();
-
-        players.forEach((p, idx) => {
-          list.innerHTML += `
-            <div class="card">
-              <div class="card-info">
-                <div class="card-title">#${idx + 1} ${p.name}</div>
-              </div>
-              <div class="card-reward">${p.score} 🪙</div>
-            </div>
-          `;
-        });
-      });
-    }
-
-    function requestWithdraw() {
-      triggerHaptic();
-      const payoutInput = document.getElementById('payout-details').value.trim();
-
-      if (balance < 10000) {
-        alert("ገንዘብ ለማውጣት ቢያንስ 10,000 Coins ያስፈልግዎታል!");
-        return;
+        alert("ተገዝቷል!");
+      } else {
+        alert("በቂ ነጥብ የለዎትም!");
       }
-      if (!payoutInput) {
-        alert("እባክዎን የቴሌብር ወይም የባንክ አካውንት ያስገቡ!");
-        return;
-      }
-
-      database.ref('withdrawals').push().set({
-        userId: userId,
-        userName: userName,
-        accountDetails: payoutInput,
-        amount: 10000,
-        status: "Pending ⏳",
-        date: new Date().toLocaleDateString()
-      }).then(() => {
-        balance -= 10000;
-        saveUserData(balance);
-        document.getElementById('payout-details').value = '';
-        alert("የማውጣት ጥያቄዎ በተሳካ ሁኔታ ተልኳል!");
-        loadUserHistory();
-      });
     }
 
-    function loadUserHistory() {
-      const histDiv = document.getElementById('user-withdraw-history');
-      database.ref('withdrawals').orderByChild('userId').equalTo(userId).once('value', (snapshot) => {
-        histDiv.innerHTML = '';
-        if (snapshot.exists()) {
-          snapshot.forEach(child => {
-            let data = child.val();
-            histDiv.innerHTML += `
-              <div class="card">
-                <div class="card-info">
-                  <div class="card-title">10,000 Coins (100 ETB)</div>
-                  <div style="font-size:10px; color:#aaa;">${data.date}</div>
-                </div>
-                <div style="color:var(--gold); font-size:11px; font-weight:bold;">${data.status}</div>
-              </div>
-            `;
-          });
-        } else {
-          histDiv.innerHTML = '<p style="font-size:11px; color:#aaa;">ምንም የማውጣት ታሪክ የለም።</p>';
-        }
-      });
+    function watchAdsgramAd() {
+      balance += 300;
+      saveUserData(balance);
+      alert("+300 Coins ተጨምሯል!");
     }
 
     function claimDaily() {
-      let lastClaim = localStorage.getItem('last_daily');
-      let today = new Date().toDateString();
-
-      if (lastClaim === today) {
-        alert("የዛሬውን የቀን ስጦታ ተቀብለዋል!");
-      } else {
-        balance += 200;
-        saveUserData(balance);
-        localStorage.setItem('last_daily', today);
-        document.getElementById('daily-btn').innerText = "Done ✓";
-        document.getElementById('daily-btn').disabled = true;
-        alert("200 Coins በነፃ አግኝተዋል!");
-      }
-    }
-
-    function completeTask(btn, reward) {
-      balance += reward;
+      balance += 200;
       saveUserData(balance);
-      btn.innerText = "Done ✓";
-      btn.disabled = true;
+      alert("200 Coins ተቀብለዋል!");
     }
 
     function copyRef() {
       const refLink = `https://t.me/greenkeybot?start=${userId}`;
       navigator.clipboard.writeText(refLink);
-      alert("የጋባዥነት ሊንክዎ Copy ሆኗል!\n" + refLink);
+      alert("የጋባዥነት ሊንክዎ Copy ሆኗል!");
     }
 
-    function checkAdmin() {
-      if (document.getElementById('admin-pass').value === ADMIN_PIN) {
-        document.getElementById('admin-login').style.display = 'none';
-        document.getElementById('admin-content').style.display = 'block';
-        loadAdminData();
-      } else {
-        alert("የተሳሳተ Admin PIN!");
+    function requestWithdraw() {
+      if (balance < 10000) {
+        alert("ቢያንስ 10,000 Coins ያስፈልግዎታል!");
+        return;
       }
-    }
-
-    function loadAdminData() {
-      const listDiv = document.getElementById('withdrawal-list');
-      database.ref('withdrawals').on('value', (snapshot) => {
-        listDiv.innerHTML = '';
-        if (snapshot.exists()) {
-          snapshot.forEach((child) => {
-            const data = child.val();
-            listDiv.innerHTML += `
-              <div class="admin-card">
-                <b>ስም:</b> ${data.userName}<br>
-                <b>አካውንት:</b> ${data.accountDetails}<br>
-                <b>መጠን:</b> ${data.amount} Coins<br>
-                <b>ሁኔታ:</b> ${data.status}
-              </div>
-            `;
-          });
-        } else {
-          listDiv.innerHTML = '<p style="font-size:11px; color:#aaa;">ምንም ጥያቄ የለም።</p>';
-        }
-      });
+      alert("የማውጣት ጥያቄዎ ተልኳል!");
     }
 
     window.addEventListener('DOMContentLoaded', () => {
